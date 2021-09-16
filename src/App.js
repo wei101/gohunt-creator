@@ -1,24 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+import Home from './pages/Home';
+import Navigator from './components/Navigator';
+import styled from 'styled-components';
 
 function App() {
+
+  const App = styled.div`
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    & > div:last-child {
+      padding-top: 5rem;
+      position:absolute;
+      top:0;
+      right:0;
+      bottom:0;
+      left:0;
+    }
+  `
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <App>
+      <Navigator />
+      <Router>
+        <Switch>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </Router>
+    </App>
   );
 }
 
