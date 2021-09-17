@@ -10,6 +10,7 @@ function Button(props) {
             border-radius: 100%;
         `}
     `
+
     return (
         <StyBtn>{children}{icon}</StyBtn>
     )
