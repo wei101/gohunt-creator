@@ -5,6 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import Home from './pages/Home';
+import Creator from './pages/Creator';
 import Navigator from './components/Navigator';
 import styled from 'styled-components';
 
@@ -29,6 +30,9 @@ function App() {
       <Navigator />
       <Router>
         <Switch>
+          <Route path="/creator">
+            <Creator />
+          </Route>
           <Route path="/">
             <Home />
           </Route>

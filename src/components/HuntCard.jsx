@@ -8,11 +8,10 @@ function HuntCard() {
   `
 
   const Header = styled.div`
-    height: 9rem;
     background-color: #559e6e;
     border-bottom: 1.2rem solid #4b7e5c;
     box-sizing: border-box;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem 1rem 1rem;
     font-size: 0.81rem;
     position: relative;
 
@@ -43,9 +42,9 @@ function HuntCard() {
   `
 
   const Content = styled.div`
-    height: 16.72rem;
     background-color: rgba(216, 184, 77, 0.3);
     box-sizing: border-box;
+    padding: 0 1.4rem 1.2rem 1.4rem;
 
     .hongbao {
       width: 7.2rem;
@@ -59,7 +58,7 @@ function HuntCard() {
       }
 
       .fee {
-        color: #F16013;
+        color: #e7610f;
         font-weight: bold;
         font-size: 1.2rem;
         width: 2.5rem;
@@ -71,25 +70,44 @@ function HuntCard() {
     }
 
     .total-fee {
-      font-size: 0.8rem;
+      font-size: 1rem;
       text-align: center;
-      color: #603708;
+      color: #e7610f;
       font-weight: bold;
+      padding-bottom: 0.8rem;
     }
   `
 
   const MsgBoxDiv = styled.div`
     border: #D9BF69 2px solid;
     border-radius: 12px;
-    margin: 0 1.4rem;
     height: 4rem;
+    margin-bottom: 1rem;
   `
 
   const InfoFooterDiv = styled.div`
     display: flex;
+  `
 
-    & > span {
-      flex: 1;
+  const HuntDetail = styled.ul`
+    flex: 1;
+    list-style: none;
+    padding: 0;
+    font-size: 0.8rem;
+    margin: 0;
+
+    li {
+      line-height: 1.6;
+    }
+
+    .name-label {
+      color: #8A6A45;
+      margin-right: 4px;
+    }
+
+    .value-label {
+      color: #603708;
+      font-weight: bold;
     }
   `
 
@@ -111,12 +129,18 @@ function HuntCard() {
         <div className="total-fee">奖金100元</div>
         <MsgBoxDiv></MsgBoxDiv>
         <InfoFooterDiv>
-          <span>1</span>
-          <span>2</span>
+          <HuntDetail>
+            <li><span className="name-label">题目数量:</span><span className="value-label">10题</span></li>
+            <li><span className="name-label">正确率需达到:</span><span className="value-label">100%</span></li>
+            <li><span className="name-label">宝藏总数:</span><span className="value-label">100</span></li>
+            <li><span className="name-label">目前剩余:</span><span className="value-label">10</span></li>
+            <li><span className="name-label">分享范围:</span><span className="value-label">仅本教室学生可见</span></li>
+          </HuntDetail>
+          <span></span>
         </InfoFooterDiv>
       </Content>
     </HuntCardWrapper>
   )
 }
 
-export default HuntCard
+export default HuntCard 

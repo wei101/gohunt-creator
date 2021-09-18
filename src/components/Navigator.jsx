@@ -1,3 +1,4 @@
+import { useHistory } from "react-router"
 import styled from "styled-components"
 import Avatar from "../components/Avatar"
 import Button from "../components/Button"
@@ -16,9 +17,20 @@ function Navigator() {
         top: 0;
         z-index: 9;
     `
+
+    const history = useHistory()
+
+    const goBack = history?.length
+
+    const handleGoBack = () => history.goBack()
     return (
         <NavWrapper>
-            <Button icon={<Icon src={BackBtnImg} />}></Button>
+            {goBack
+                ?
+                <Button onClick={handleGoBack} icon={<Icon src={BackBtnImg} />}></Button>
+                :
+                <span></span>
+            }
             <Avatar />
         </NavWrapper>
     )
