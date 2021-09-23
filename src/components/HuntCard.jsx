@@ -1,115 +1,113 @@
 import styled from "styled-components"
 import HBImg from "../images/wwb.png"
 
-function HuntCard() {
+const HuntCardWrapper = styled.div`
+  width: 15.5rem;
+`
+const Header = styled.div`
+  background-color: #559e6e;
+  border-bottom: 1.2rem solid #4b7e5c;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem 1rem 1rem;
+  font-size: 0.81rem;
+  position: relative;
 
-  const HuntCardWrapper = styled.div`
-    width: 15.5rem;
-  `
+  & > div {
+    color: #ADE8C2;
+    margin: 0.27rem 0;
+  }
 
-  const Header = styled.div`
-    background-color: #559e6e;
-    border-bottom: 1.2rem solid #4b7e5c;
-    box-sizing: border-box;
-    padding: 0.5rem 1rem 1rem 1rem;
-    font-size: 0.81rem;
+  .white {
+    color: white;
+  }
+
+  .title {
+    font-size: 1.1rem;
+    margin: 0;
+    color: white;
+  }
+
+  .flag {
+    width: 5rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 100px;
+    background-color: #55D68F;
+    margin-left: 4px;
+    color: white;
+  }
+`
+
+const Content = styled.div`
+  background-color: rgba(216, 184, 77, 0.3);
+  box-sizing: border-box;
+  padding: 0 1.4rem 1.2rem 1.4rem;
+
+  .hongbao {
+    width: 7.2rem;
+    margin: auto;
     position: relative;
-
-    & > div {
-      color: #ADE8C2;
-      margin: 0.27rem 0;
-    }
-
-    .white {
-      color: white;
-    }
-
-    .title {
-      font-size: 1.1rem;
-      margin: 0;
-      color: white;
-    }
-
-    .flag {
-      width: 5rem;
-      padding: 0.1rem 0.5rem;
-      border-radius: 100px;
-      background-color: #55D68F;
-      margin-left: 4px;
-      color: white;
-    }
+    margin-top: -2rem;
     
-  `
-
-  const Content = styled.div`
-    background-color: rgba(216, 184, 77, 0.3);
-    box-sizing: border-box;
-    padding: 0 1.4rem 1.2rem 1.4rem;
-
-    .hongbao {
-      width: 7.2rem;
-      margin: auto;
-      position: relative;
-      margin-top: -2rem;
-      
-      img {
-        width: 100%;
-        object-fit: cover;
-      }
-
-      .fee {
-        color: #e7610f;
-        font-weight: bold;
-        font-size: 1.2rem;
-        width: 2.5rem;
-        position: absolute;
-        top: 1.8rem;
-        left: 0.6rem;
-        text-align: center;
-      }
+    img {
+      width: 100%;
+      object-fit: cover;
     }
 
-    .total-fee {
-      font-size: 1rem;
-      text-align: center;
+    .fee {
       color: #e7610f;
       font-weight: bold;
-      padding-bottom: 0.8rem;
+      font-size: 1.2rem;
+      width: 2.5rem;
+      position: absolute;
+      top: 1.8rem;
+      left: 0.6rem;
+      text-align: center;
     }
-  `
+  }
 
-  const MsgBoxDiv = styled.div`
-    border: #D9BF69 2px solid;
-    border-radius: 12px;
-    height: 4rem;
-    margin-bottom: 1rem;
-  `
+  .total-fee {
+    font-size: 1rem;
+    text-align: center;
+    color: #e7610f;
+    font-weight: bold;
+    padding-bottom: 0.8rem;
+  }
+`
 
-  const InfoFooterDiv = styled.div`
-    display: flex;
-  `
+const MsgBoxDiv = styled.div`
+  border: #D9BF69 2px solid;
+  border-radius: 12px;
+  height: 4rem;
+  margin-bottom: 1rem;
+`
 
-  const HuntDetail = styled.ul`
-    flex: 1;
-    list-style: none;
-    padding: 0;
-    font-size: 0.8rem;
-    margin: 0;
+const InfoFooterDiv = styled.div`
+  display: flex;
+`
 
-    li {
-      line-height: 1.6;
-    }
+const HuntDetail = styled.ul`
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  font-size: 0.8rem;
+  margin: 0;
 
-    .name-label {
-      color: #8A6A45;
-      margin-right: 4px;
-    }
+  li {
+    line-height: 1.6;
+  }
 
-    .value-label {
-      color: #603708;
-      font-weight: bold;
-    }
-  `
+  .name-label {
+    color: #8A6A45;
+    margin-right: 4px;
+  }
+
+  .value-label {
+    color: #603708;
+    font-weight: bold;
+  }
+`
+
+function HuntCard() {
 
   return (
     <HuntCardWrapper>

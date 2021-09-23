@@ -1,43 +1,42 @@
 import styled, { css } from "styled-components";
 
 
+const StepItemBox = styled.div`
+  border-radius: 4rem;
+  border: 2px solid #FBF8E9;
+  line-height: 1.6;
+  padding: 0 1rem;
+  font-weight: bold;
+  color: #FBF8E9;
+  ${props => props.active &&
+    css`
+    color: #5E84CB;
+    background-color: #FBF8E9;
+  `};
+`
+
 function StepItem(props) {
 
-  const { index, active } = props
-
-  const StepItem = styled.div`
-    border-radius: 4rem;
-    border: 2px solid #FBF8E9;
-    line-height: 1.6;
-    padding: 0 1rem;
-    font-weight: bold;
-    color: #FBF8E9;
-    ${() => active &&
-      css`
-      color: #5E84CB;
-      background-color: #FBF8E9;
-    `};
-  `
-
-  return <StepItem>Step {index}</StepItem>
+  const { index } = props
+  
+  return <StepItemBox>Step {index}</StepItemBox>
 }
 
+const StepWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+`
+
+const StepLine = styled.div`
+  flex: 1;
+  border-top: 1px solid #FBF8E9;
+  height: 0;
+  margin-top: 1rem;
+`
+
 function StepBar(props) {
-  const { count, current } = props
-
-  const StepWrapper = styled.div`
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-  `
-
-  const StepLine = styled.div`
-    flex: 1;
-    border-top: 1px solid #FBF8E9;
-    height: 0;
-    margin-top: 1rem;
-  `
-
+  const { count, current, className } = props
   const steps = []
 
   for (let i = 1; i <= count; i++) {
@@ -47,7 +46,7 @@ function StepBar(props) {
     steps.push(<StepItem index={i} active={i === current} />)
   }
 
-  return <StepWrapper>
+  return <StepWrapper className={className}>
     {steps}
   </StepWrapper>
 }

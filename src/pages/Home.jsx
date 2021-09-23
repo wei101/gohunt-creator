@@ -6,35 +6,35 @@ import HomeBgImg from "../images/home-bg.jpg"
 import Button from "../components/Button"
 import { useHistory } from "react-router"
 
-function Home() {
+const HomeWrapper = styled.div`
+  height: 100%;
+  background: url(${HomeBgImg});
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`
 
-  const HomeWrapper = styled.div`
-    background: url(${HomeBgImg});
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  `
+const HuntCardGrid = styled.div`
+  display: flex;
+  width: 68.5rem;
+  height: 25.81rem;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  margin: 0 auto;
+  flex-wrap: wrap;
 
-  const HuntCardGrid = styled.div`
-    display: flex;
-    width: 68.5rem;
-    height: 25.81rem;
-    overflow-x: hidden;
-    overflow-y: overlay;
-    margin: 0 auto;
-    flex-wrap: wrap;
-    
-    & > div {
-      margin-right: 1.5rem;
-      margin-bottom: 1.5rem;
+  & > div {
+    margin-right: 1.5rem;
+    margin-bottom: 1.5rem;
 
-      &:last-child {
-        margin-right: 0;
-      }
+    &:last-child {
+      margin-right: 0;
     }
-  `
-
+  }
+`
+function Home() {
+  
   const history = useHistory()
 
   return (
