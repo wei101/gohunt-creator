@@ -13,7 +13,7 @@ const AppBox = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  display: flex;
+  display: flex;  
   flex-direction: column;
 `
 

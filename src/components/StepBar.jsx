@@ -18,7 +18,7 @@ const StepItemBox = styled.div`
 function StepItem(props) {
 
   const { index } = props
-  
+
   return <StepItemBox>Step {index}</StepItemBox>
 }
 
@@ -41,9 +41,9 @@ function StepBar(props) {
 
   for (let i = 1; i <= count; i++) {
     if (i !== 1 && i <= count) {
-      steps.push(<StepLine />)
+      steps.push(<StepLine key={'l' + i} />)
     }
-    steps.push(<StepItem index={i} active={i === current} />)
+    steps.push(<StepItem key={i} index={i} active={i === current} />)
   }
 
   return <StepWrapper className={className}>

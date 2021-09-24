@@ -2,6 +2,18 @@ import styled from "styled-components"
 import { fontSizeMaps } from "./formsStyle";
 
 const InputBox = styled.input`
+  width: ${props => {
+
+    if (props.fullwidth) {
+      return '100%'
+    }
+
+    if (props.width) {
+      return props.width
+    }
+    
+    return 'auto'
+  }};
   font-size: ${props => fontSizeMaps[props.size || 'medium']};
   border-radius: 2em;
   outline: none;
@@ -16,11 +28,32 @@ const InputBox = styled.input`
   &::placeholder {
     color:#cec17e; 
   }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+      margin: 0;
+  }
 `
-function Input(props) {
+function Input({
+  value,
+  onChange = () => { },
+  fullwidth = true,
+  width,
+  max = Number.MAX_VALUE,
+  min = Number.MIN_VALUE,
+  ...props
+}) {
+
+  const handleChange = e => {
+    const value = Number(e.target.value)
+    if (value <= max && value >= min) {
+      onChange(value)
+    }
+  }
 
   return (
-    <InputBox {...props} />
+    <InputBox width={width} fullwidth={fullwidth} value={value} onChange={handleChange} {...props} />
   )
 }
 
