@@ -11,6 +11,7 @@ const Header = styled.div`
   padding: 0.5rem 1rem 1rem 1rem;
   font-size: 0.81rem;
   position: relative;
+  border-radius: 0.4em;
 
   & > div {
     color: #ADE8C2;

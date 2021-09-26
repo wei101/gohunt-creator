@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
-import { Between } from "../../style/Between";
-import { Center } from "../../style/Center";
+import { Between } from "../../styles";
+import { Center } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
 
 const PreviewLayout = styled(MobilePageLayout)`
@@ -20,6 +20,10 @@ const Control = styled(Between)`
   padding: 0em 1em;
   flex: 0;
 `
+const GridBoxWrapper = styled.div`
+  flex: 1;
+  overflow-y: auto;
+`
 
 const GridBox = styled.div`
   display: grid;
@@ -29,6 +33,7 @@ const GridBox = styled.div`
 
 const GridItem = styled.div`
   padding-bottom: 100%;
+  height: 0;
   position: relative;
 `
 
@@ -38,8 +43,7 @@ const GridItemContent = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  width: 100%;
-  height: 100%;
+  margin: 4px;
   border: 4px solid #e5b058;
 `
 
@@ -63,7 +67,9 @@ const BtnCenter = styled(Center)`
   padding: 1em 0;
 `
 
-function Preview(props) {
+function Preview({
+  onSubmit
+}) {
   return (
     <PreviewLayout>
       <Header level="1">宝藏名</Header>
@@ -71,17 +77,20 @@ function Preview(props) {
         <span></span>
         <AddTopic>添加题目</AddTopic>
       </Control>
-      <GridBox>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-        <GridItem><GridItemContent></GridItemContent></GridItem>
-      </GridBox>
+      <GridBoxWrapper>
+        <GridBox>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+          <GridItem><GridItemContent></GridItemContent></GridItem>
+        </GridBox>
+      </GridBoxWrapper>
       <Footer>
         <FooterInfoBar>
           <span>宝藏:100元</span>
@@ -89,7 +98,7 @@ function Preview(props) {
           <span>限100人</span>
         </FooterInfoBar>
         <BtnCenter>
-          <Button>生成宝藏</Button>
+          <Button onClick={onSubmit}>生成宝藏</Button>
         </BtnCenter>
       </Footer>
     </PreviewLayout>

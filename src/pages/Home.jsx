@@ -2,6 +2,7 @@ import styled from "styled-components"
 import HuntCard from "../components/HuntCard"
 import Icon from "../components/Icon"
 import BackBtnImg from "../images/back-btn.png"
+import AddImg from "../images/add-timu.png"
 import HomeBgImg from "../images/home-bg.jpg"
 import Button from "../components/Button"
 import { useHistory } from "react-router"
@@ -47,7 +48,7 @@ function Home() {
         <HuntCard />
         <HuntCard />
       </HuntCardGrid>
-      <Button onClick={() => history.push('/creator')}>创建宝藏<Icon src={BackBtnImg} /></Button>
+      <Button onClick={() => history.push('/creator')}>创建宝藏<Icon size="small" src={AddImg} /></Button>
     </HomeWrapper>
   )
 }

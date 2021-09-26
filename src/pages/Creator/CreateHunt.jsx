@@ -3,15 +3,19 @@ import styled from "styled-components";
 import Button from "../../components/Button";
 import Checkbox from "../../components/Checkbox";
 import Form, { FormItem } from "../../components/Form";
+import Editor from "../../components/forms/Editor";
 import Input from "../../components/forms/Input";
+import Radio from "../../components/forms/Radio";
 import Select from "../../components/forms/Select";
 import Header from "../../components/Header";
-import { Center } from "../../style/Center";
+import { Center } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
-
 
 const ContentBox = styled.div`
   padding: 1em 2em;
+  overflow-y: auto;
+  height: 0;
+  flex: 1;
 `
 
 const FormHeader = styled.div`
@@ -25,7 +29,16 @@ const SubCovertControl = styled.div`
   font-size: 0.9rem;
 `
 
-function CreateHunt(props) {
+const RadioList = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const SubRadois = styled(RadioList)`
+  padding-left: 2em;
+`
+
+function CreateHunt({ onSubmit }) {
   const [selected, setSelected] = useState(1)
   const [topicCount, setTopicCount] = useState(0)
   const options = [
@@ -74,13 +87,27 @@ function CreateHunt(props) {
           </FormItem>
         </Form>
 
+
+        <Header level="4">公开范围</Header>
+        <RadioList>
+          <Radio>公开给所有棋友</Radio>
+          <Radio>公开给测试用</Radio>
+          <Radio>公开给指定班级学生</Radio>
+          <SubRadois>
+            <Checkbox>测试班级1</Checkbox>
+            <Checkbox>测试班级2</Checkbox>
+            <Checkbox>测试班级3</Checkbox>
+          </SubRadois>
+        </RadioList>
+        <Header level="4">说明</Header>
+        <Editor style={{marginBottom: '1em'}} />
         <div>
-          <Checkbox>需要留下联系方式才可获取宝藏</Checkbox>
           <Checkbox>分享到101平台（手续费20%）</Checkbox>
         </div>
         <Center>
-          <Button width='5em'>预览</Button>
+          <Button width='5em' onClick={onSubmit}>预览</Button>
         </Center>
+
       </ContentBox>
     </MobilePageLayout>
   )

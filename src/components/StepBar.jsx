@@ -15,12 +15,7 @@ const StepItemBox = styled.div`
   `};
 `
 
-function StepItem(props) {
-
-  const { index } = props
-
-  return <StepItemBox>Step {index}</StepItemBox>
-}
+const StepItem = ({ index, active }) => <StepItemBox active={active}>Step {index}</StepItemBox>
 
 const StepWrapper = styled.div`
   display: flex;
@@ -39,16 +34,18 @@ function StepBar(props) {
   const { count, current, className } = props
   const steps = []
 
-  for (let i = 1; i <= count; i++) {
-    if (i !== 1 && i <= count) {
+  for (let i = 0; i < count; i++) {
+    if (i !== 0 && i < count) {
       steps.push(<StepLine key={'l' + i} />)
     }
     steps.push(<StepItem key={i} index={i} active={i === current} />)
   }
 
-  return <StepWrapper className={className}>
-    {steps}
-  </StepWrapper>
+  return (
+    <StepWrapper className={className}>
+      {steps}
+    </StepWrapper>
+  )
 }
 
 export default StepBar;

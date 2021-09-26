@@ -1,10 +1,11 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { fontSizeMaps } from "./formsStyle";
 import selectArrowImg from "../../images/select-arrow.png"
 import { useState } from "react";
 
 const SelectBox = styled.div`
   display: block;
+  white-space: nowrap;
   font-size: ${props => fontSizeMaps[props.size || 'medium']};
   text-align: center;
   color: #694216;
@@ -53,9 +54,6 @@ const TopicBox = styled.div`
 
 function Topic(props) {
   const { onClick, show, children } = props
-  console.log(show);
-
-
   return <TopicBox show={show} onClick={onClick}>{children}</TopicBox>
 }
 

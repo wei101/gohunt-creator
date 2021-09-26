@@ -1,19 +1,24 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
+import { CSSTransition, SwitchTransition, TransitionGroup } from "react-transition-group"
 import styled from "styled-components"
 import StepBar from "../../components/StepBar"
 import creatorBgImg from '../../images/creator-bg.jpg'
 import CreateHunt from "./CreateHunt"
 import Preview from "./Preview"
+import ShareReport from "./ShareReport"
+import './index.css'
 
 const CreatorBox = styled.div`
   background: url(${creatorBgImg});
-  height: 100%;
   padding-top: 5em;
   display: flex;
+  height: 0;
+  flex: 1;
   flex-direction: column;
 
   .header {
     display: flex;
+    flex: 0;
 
     .tmp {
       flex: 1;
@@ -25,22 +30,39 @@ const CreatorBox = styled.div`
   }
 
   .content {
+    position: relative;
     display: flex;
-    flex: 1;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: stretch;
     padding: 2em 0;
-
-    > * {
-      margin-right: 10px;
-    }
+    height: 0;
+    flex: 1;
+    flex-wrap: nowrap;
   }
 `
+const pageKeys = [
+  'creator',
+  'preview',
+  'report'
+];
 
+const comps = [CreateHunt, Preview, ShareReport]
 function Creator() {
-  const [progress, setProgress] = useState(1)
+
+  const [progress, setProgress] = useState(0)
+  const [show, setShow] = useState(0)
   const [selected, onSelected] = useState(1)
   const [checked, onChecked] = useState(false)
+ 
+  const onSubmit = () => {
+    if (2 > progress) {
+      setProgress(progress + 1)
+      setShow(!show)
+    }
+  }
+
+  const CurrentPage = comps[progress]
   return (
     <CreatorBox>
       <div className="header">
@@ -49,10 +71,18 @@ function Creator() {
         <div className="tmp"></div>
       </div>
       <div className="content">
-        <CreateHunt />
-        <Preview />
+
+        <SwitchTransition mode="out-in">
+          <CSSTransition
+            key={pageKeys[progress]}
+            classNames="test"
+            timeout={500}
+          >
+            <CurrentPage onSubmit={onSubmit} />
+          </CSSTransition>
+        </SwitchTransition>
       </div>
-    </CreatorBox>
+    </CreatorBox >
   )
 }
 

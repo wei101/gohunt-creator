@@ -13,31 +13,26 @@ const AppBox = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  display: flex;  
+  max-height: 100vh;
+  display: flex; 
   flex-direction: column;
 `
 
-const Content = styled.div`
-  flex: 1;
-`
-
 function App() {
-
+  
   return (
     <AppBox>
       <Navigator />
-      <Content>
-        <Router>
-          <Switch>
-            <Route path="/creator">
-              <Creator />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </Router>
-      </Content>
+      <Router>
+        <Switch>
+          <Route path="/creator">
+            <Creator />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </Router>
     </AppBox>
   );
 }

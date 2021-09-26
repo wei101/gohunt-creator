@@ -14,6 +14,7 @@ const FormItemBox = styled.div`
 const FormItemLabel = styled.div`
   flex: ${props => props.theme.labelSpan};
   overflow: hidden;
+  white-space: nowrap;
   margin-right: 0.5em;
   color: #603708;
   font-weight: bold;

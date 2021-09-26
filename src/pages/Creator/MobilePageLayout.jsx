@@ -4,9 +4,12 @@ import HomeBgImg from "../../images/home-bg.jpg"
 
 const PageLayout = styled.div`
   width: 22em;
-  height: 100%;
   background-image: url(${HomeBgImg});
-  overflow-y: auto;
+  margin: auto;
+  height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 export function MobilePageLayout({children, ...rest}) {
