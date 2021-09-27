@@ -1,22 +1,23 @@
 import styled from "styled-components"
-import correctImg from "../images/correct.png"
+import yesImg from "../images/yes.png"
+import { fontSizeMaps } from "./forms/formsStyle"
 const LabelBox = styled.label`
   display: inline-flex;
   align-items: center;
   color: #603708;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 0.75em;
+  font-size: ${props => (fontSizeMaps[props.size] || props.size) + 'em'}
 `
 
 const CheckboxShow = styled.div`
   width: 1em;
   height: 1em;
-  border: 3px solid #559e6e;
+  border: 3px solid #A39B6F;
   border-radius: 0.25em;
-  background-color: ${props => props.checked ? '#fbf8e9' : 'rgba(0, 0, 0, 0)'};
+  background-color: ${props => props.checked ? '#559e6e' : '#fbf8e9'};
+  border-color: ${props => props.checked ? '#559e6e' : '#A39B6F'};
   margin-right: .5em;
-  background-image: url(${props => props.checked ? correctImg : ''});
+  background-image: url(${props => props.checked ? yesImg : ''});
   background-size: cover;
 `
 
@@ -24,14 +25,21 @@ const CheckboxElem = styled.input`
   display: none;
 `
 
-function Checkbox({ children, name, checked, onChecked = () => {} }) {
+function Checkbox({
+  children,
+  name,
+  checked,
+  size = 'medium',
+  onChange = () => { }
+}) {
 
   const handleChecked = e => {
-    onChecked(!checked)
+    onChange(!checked)
   }
+  
   return (
-    <LabelBox>
-      <CheckboxShow checked={checked} />
+    <LabelBox size={size}>
+      <CheckboxShow checked={checked} onClick={handleChecked} />
       <CheckboxElem type="checkbox" name={name} defaultChecked={checked} onChange={handleChecked} />
       {children}
     </LabelBox>

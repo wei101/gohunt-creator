@@ -63,7 +63,7 @@ function Creator() {
   }
 
   const CurrentPage = comps[progress]
-  return (
+  return (  
     <CreatorBox>
       <div className="header">
         <div className="tmp"></div>

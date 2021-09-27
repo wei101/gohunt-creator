@@ -38,7 +38,7 @@ function StepBar(props) {
     if (i !== 0 && i < count) {
       steps.push(<StepLine key={'l' + i} />)
     }
-    steps.push(<StepItem key={i} index={i} active={i === current} />)
+    steps.push(<StepItem key={i} index={i + 1} active={i === current} />)
   }
 
   return (

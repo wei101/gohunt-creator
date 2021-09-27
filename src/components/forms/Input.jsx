@@ -34,6 +34,7 @@ const InputBox = styled.input`
       -webkit-appearance: none !important;
       margin: 0;
   }
+
 `
 function Input({
   value,
@@ -42,13 +43,24 @@ function Input({
   width,
   max = Number.MAX_VALUE,
   min = Number.MIN_VALUE,
+  type = 'text',
+  maxlength = Number.MAX_VALUE,
   ...props
 }) {
 
+  console.log(maxlength);
+
   const handleChange = e => {
-    const value = Number(e.target.value)
-    if (value <= max && value >= min) {
+    e.preventDefault()
+
+    let value = e.target.value
+    if (type === 'text') {
       onChange(value)
+    } else if (type === 'number') {
+      value = Number(value)
+      if (value <= max && value >= min) {
+        onChange(value)
+      }
     }
   }
 
@@ -58,6 +70,8 @@ function Input({
       fullwidth={fullwidth}
       value={value}
       onChange={handleChange}
+      maxLength={maxlength}
+      type={type}
       {...props}
     />
   )

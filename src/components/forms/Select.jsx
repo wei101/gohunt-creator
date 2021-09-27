@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { fontSizeMaps } from "./formsStyle";
 import selectArrowImg from "../../images/select-arrow.png"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SelectBox = styled.div`
   display: block;
@@ -14,15 +14,26 @@ const SelectBox = styled.div`
   height: 2.5em;
   box-sizing: border-box;
   cursor: pointer;
-  z-index: 10;
-  
-  .option {
-    background-color: #f0e8ba;
-    z-index: 10;
+  position: relative;
+`
 
-    &:last-child {
-      border-radius: 0 0 1.5em 1.5em;
-    }
+const Options = styled.div`
+  z-index: 999;
+  position: absolute;
+  width: 100%;
+  z-index: 9;
+`
+
+const Option = styled.div`
+  background-color: ${props => props.active ? '#ffbb00' : '#f0e8ba'};
+  z-index: 10;
+
+  &:last-child {
+    border-radius: 0 0 1.5em 1.5em;
+  }
+
+  &:nth-child(odd) {
+    background-color: ${props => props.active ? '#ffbb00' : '#e8dfa8'};
   }
 `
 
@@ -48,9 +59,9 @@ const TopicBox = styled.div`
     height: 1.2em;
     transform: rotate(-90deg);
     transitoin: transform .4s linear;
-    z-index: 9;
   }
 `
+const NullOption = { label: ' ', value: Number.MAX_VALUE }
 
 function Topic(props) {
   const { onClick, show, children } = props
@@ -62,21 +73,35 @@ function Select(props) {
   const [show, setShow] = useState(false)
   const toggle = () => setShow(!show)
 
-  let currentOptionIndex = options.findIndex(o => o.value === selected);
-  currentOptionIndex = currentOptionIndex == -1 ? 0 : currentOptionIndex;
-  const restOption = [...options]
-  restOption.splice(currentOptionIndex, 1)
-  const currentOption = options[currentOptionIndex]
+  let currentOption = options.find(o => o.value === selected)
+  if (!currentOption) {
+    currentOption = options.length > 0 ? options[0] : NullOption;
+  }
+  
+  useEffect(() => {
+    if (!selected) {
+      onSelected(currentOption)
+    }
+  }, [])
 
-  const optionElems = restOption.map(option => <div onClick={e => onSelected(option.value)} className="option" key={option.value}>{option.label}</div>)
+  const optionElems = options.map(option => {
+    return <Option
+      onClick={() => onSelected(option.value)}
+      active={currentOption.value === option.value}
+      key={option.label}
+    >
+      {option.label}
+    </Option>
+  })
 
 
   return (
     <SelectBox>
       <Topic show={show} onClick={toggle}>{currentOption.label}</Topic>
+
       {
         show &&
-        <>{optionElems}</>
+        <Options>{optionElems}</Options>
       }
     </SelectBox>
   )
