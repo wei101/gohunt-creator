@@ -1,7 +1,6 @@
 import styled from "styled-components"
 import HuntCard from "../components/HuntCard"
 import Icon from "../components/Icon"
-import BackBtnImg from "../images/back-btn.png"
 import AddImg from "../images/add-timu.png"
 import HomeBgImg from "../images/home-bg.jpg"
 import Button from "../components/Button"

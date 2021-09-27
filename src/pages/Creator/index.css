@@ -1,6 +1,6 @@
 .test-enter {
   opacity: 0;
-  transform: translateX(-200%);
+  transform: translateX(200%);
 }
 
 .test-enter-active {
@@ -16,6 +16,6 @@
 
 .test-exit-active {
   opacity: 0;
-  transform: translateX(200%);
+  transform: translateX(-200%);
   transition: opacity 400ms, transform 400ms;
 }

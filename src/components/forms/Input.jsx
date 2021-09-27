@@ -11,7 +11,7 @@ const InputBox = styled.input`
     if (props.width) {
       return props.width
     }
-    
+
     return 'auto'
   }};
   font-size: ${props => fontSizeMaps[props.size || 'medium']};
@@ -53,7 +53,13 @@ function Input({
   }
 
   return (
-    <InputBox width={width} fullwidth={fullwidth} value={value} onChange={handleChange} {...props} />
+    <InputBox
+      width={width}
+      fullwidth={fullwidth}
+      value={value}
+      onChange={handleChange}
+      {...props}
+    />
   )
 }
 

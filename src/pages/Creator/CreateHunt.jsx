@@ -49,7 +49,7 @@ function CreateHunt({ onSubmit }) {
     <MobilePageLayout>
       <Header level="1">创建宝藏</Header>
       <ContentBox>
-        <Input size="large" placeholder="宝藏名称(限10字)" />
+        <Input maxlength="10" size="large" placeholder="宝藏名称(限10字)" />
         <FormHeader>
           <span></span>
           <Header level="4">题库选题</Header>
@@ -107,7 +107,6 @@ function CreateHunt({ onSubmit }) {
         <Center>
           <Button width='5em' onClick={onSubmit}>预览</Button>
         </Center>
-
       </ContentBox>
     </MobilePageLayout>
   )
