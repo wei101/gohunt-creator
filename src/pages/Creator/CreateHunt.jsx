@@ -5,7 +5,7 @@ import Checkbox from "../../components/Checkbox";
 import Form, { FormItem } from "../../components/Form";
 import Editor from "../../components/forms/Editor";
 import Input from "../../components/forms/Input";
-import Radio from "../../components/forms/Radio";
+import Radio, { RadioGroup } from "../../components/forms/Radio";
 import Select from "../../components/forms/Select";
 import Header from "../../components/Header";
 import Icon from "../../components/Icon";
@@ -129,6 +129,7 @@ function CreateHunt({ onSubmit }) {
   const [fee, setFee] = useState(0)
   const [correctPrecent, setCorrectPrecent] = useState(0)
   const [pcount, setPCount] = useState(0)
+  const [radioValue, setRadioValue] = useState(0)
   const options = [
     { label: '101精品题库', value: 1 },
     { label: '101题库', value: 2 },
@@ -240,9 +241,11 @@ function CreateHunt({ onSubmit }) {
 
         <Header level="4">公开范围</Header>
         <RadioList>
-          <Radio name="op" size="mini" checked={checked} onChange={setChecked}>公开给所有棋友</Radio>
-          <Radio name="op" size="mini" checked={checked} onChange={setChecked}>公开给测试用</Radio>
-          <Radio name="op" size="mini" checked={checked} onChange={setChecked}>公开给指定班级学生</Radio>
+          <RadioGroup value={radioValue} onChange={setRadioValue} name="rr">
+            <Radio size="mini" checked={checked} onChange={setChecked} value={1}>公开给所有棋友</Radio>
+            <Radio size="mini" checked={checked} onChange={setChecked} value={2}>公开给测试用</Radio>
+            <Radio size="mini" checked={checked} onChange={setChecked} value={3}>公开给指定班级学生</Radio>
+          </RadioGroup>
           <SubRadois>
             <Checkbox size="mini" checked={checked} onChange={setChecked}>测试班级1</Checkbox>
             <Checkbox size="mini" checked={checked} onChange={setChecked}>测试班级2</Checkbox>

@@ -48,8 +48,6 @@ function Input({
   ...props
 }) {
 
-  console.log(maxlength);
-
   const handleChange = e => {
     e.preventDefault()
 

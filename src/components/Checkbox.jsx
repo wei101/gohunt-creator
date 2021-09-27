@@ -34,12 +34,12 @@ function Checkbox({
 }) {
 
   const handleChecked = e => {
-    onChange(!checked)
+    onChange(e.target.checked)
   }
-  
+
   return (
     <LabelBox size={size}>
-      <CheckboxShow checked={checked} onClick={handleChecked} />
+      <CheckboxShow checked={checked} />
       <CheckboxElem type="checkbox" name={name} defaultChecked={checked} onChange={handleChecked} />
       {children}
     </LabelBox>

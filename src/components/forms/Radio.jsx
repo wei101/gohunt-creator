@@ -1,6 +1,5 @@
+import { createContext, useContext } from "react"
 import styled from "styled-components"
-import correctImg from "../../images/correct.png"
-import Checkbox from "../Checkbox"
 import { fontSizeMaps } from "./formsStyle"
 
 const LabelBox = styled.label`
@@ -37,19 +36,44 @@ const CheckboxElem = styled.input`
   display: none;
 `
 
-export default function Radio({
-  checked,
-  size,
-  children,
+const RadioGroupContext = createContext()
+// const RadioGroupContextProvider = RadioGroupContext.Provider
+
+export function RadioGroup({
   name,
-  onChange = () => { }
+  onChange,
+  value,
+  children
 }) {
   return (
+    <RadioGroupContext.Provider value={{
+      name,
+      onChange: (value) => {
+        onChange(value)
+      },
+      value,
+    }}>
+      {children}
+    </RadioGroupContext.Provider>
+  )
+}
+
+export default function Radio(props) {
+  const {
+    size,
+    children,
+  } = props
+  const context = useContext(RadioGroupContext)
+  const name = context?.name || props?.name
+  const checked = props?.value === context?.value
+  const onChange = context?.onChange || props?.onChange || (() => {})
+  
+  return (
     <LabelBox size={size}>
-      <RadioShow checked={checked} onClick={() => onChange(!checked)}>
+      <RadioShow>
         {checked && <RadioInnerBox />}
+        <CheckboxElem onChange={() => onChange(props.value)} name={name} type="radio" />
       </RadioShow>
-      <CheckboxElem name={name} type="radio" />
       {children}
     </LabelBox>
   )
