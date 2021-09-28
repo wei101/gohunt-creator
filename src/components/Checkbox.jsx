@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import yesImg from "../images/yes.png"
 import { fontSizeMaps } from "./forms/formsStyle"
@@ -32,9 +32,11 @@ function Checkbox(props) {
     children,
     name,
     size = 'medium',
-    onChange = () => { }
+    onChange = () => { },
+    defaultChecked = false
   } = props
   const [innerChecked, setInnerChecked] = useState(false)
+  
   const handleChecked = e => {
     if (!props.hasOwnProperty('checked')) {
       setInnerChecked(e.target.checked)
@@ -48,7 +50,7 @@ function Checkbox(props) {
   return (
     <LabelBox size={size}>
       <CheckboxShow checked={finalChecked} />
-      <CheckboxElem type="checkbox" name={name} defaultChecked={finalChecked} onChange={handleChecked} />
+      <CheckboxElem type="checkbox" name={name} defaultChecked={defaultChecked} onChange={handleChecked} />
       {children}
     </LabelBox>
   )

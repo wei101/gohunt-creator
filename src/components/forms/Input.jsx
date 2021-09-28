@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components"
 import { fontSizeMaps } from "./formsStyle";
 
@@ -47,23 +48,33 @@ function Input({
   maxlength = Number.MAX_VALUE,
   ...props
 }) {
+  const [oldValue, setOldValue] = useState(null)
 
   const handleChange = e => {
     e.preventDefault()
 
-    let value = e.target.value
+    let newValue = e.target.value
     if (type === 'text') {
-      onChange(value)
+      setOldValue(value)
+      onChange(newValue)
     } else if (type === 'number') {
-      value = Number(value)
-      if (value <= max && value >= min) {
-        onChange(value)
+      const nvalue = Number(newValue)
+      if ((nvalue <= max && nvalue >= min) || newValue === '') {
+        setOldValue(value)
+        onChange(newValue)
       }
+    }
+  }
+
+  const onBlur = () => {
+    if (type === 'number' && value === '') {
+      onChange(oldValue)
     }
   }
 
   return (
     <InputBox
+      onBlur={onBlur}
       width={width}
       fullwidth={fullwidth}
       value={value}

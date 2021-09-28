@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 import { fontSizeMaps } from "./forms/formsStyle"
 
 const StyBtn = styled.div`
@@ -23,19 +23,21 @@ const StyBtn = styled.div`
 `
 
 const IconBtn = styled.div`
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  background-color: #f0df95;
+  background-color: ${props => props.color || '#5e84cc'};
   border-radius: 100%;
-  width: 2rem;
-  height: 2rem;
+  width: ${props => props.width || 'auto'};
+  height: ${props => props.width || 'auto'};
 `
 function Button(props) {
-  const { children, icon, size="medium", color="#5e84cc", width, ...rest } = props
+  const { children, icon, size="medium", color="#5e84cc", width } = props
 
   if (icon) {
     return (
-      <IconBtn {...props}>{icon}</IconBtn>
+      <IconBtn width={width} {...props}>{icon}</IconBtn>
     )
   }
 

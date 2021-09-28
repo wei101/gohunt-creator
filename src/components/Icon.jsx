@@ -2,8 +2,8 @@ import styled from "styled-components"
 
 const IconSpan = styled.span`
   display: inline-block;
-  width: ${props => (IconSize[props.size] || props.size) +'em'};
-  height: ${props => (IconSize[props.size] || props.size) + 'em'};
+  width: ${props => (IconSize[props.size] || props.size) +'rem'};
+  height: ${props => (IconSize[props.size] || props.size) + 'rem'};
 
   & > img {
       width: 100%;
@@ -27,7 +27,7 @@ function Icon({
   
   return (
     <IconSpan size={size} style={style} onClick={onClick}>
-      <img src={src} />
+      <img src={src} alt="" />
     </IconSpan>
   )
 }

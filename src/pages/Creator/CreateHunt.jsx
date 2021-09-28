@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "../../components/Button";
 import Checkbox from "../../components/Checkbox";
@@ -14,6 +14,13 @@ import deleteImg from "../../images/delete.png"
 import addImg from "../../images/add.png"
 import { Center, Margin, Padding } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
+import { getStartCreateBaby, saveOneBaby } from "../../apis";
+import { TopicModeType, TopicOriginType } from "../../types";
+import { useDispatch } from "react-redux";
+import { loadBabyData, setCreatorData } from "../../reducers/creator";
+import { useSelector } from "react-redux";
+import { getObjectEmptyKey } from "../../utils";
+import { setTopics } from "../../reducers/preview";
 
 const ContentBox = styled.div`
   padding: 1em 2em;
@@ -90,6 +97,12 @@ const TopicIdItem = styled.div`
   padding-right: 0.5em;
 `
 
+const ErrMsgBox = styled(Center)`
+  color: #F16013;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+`
+
 const timeOptions = [
   { label: '5秒', value: 5 },
   { label: '10秒', value: 10 },
@@ -99,21 +112,98 @@ const timeOptions = [
   { label: '5分钟', value: 300 },
 ]
 
-const TopicModeType = {
-  OPTION: 0,
-  INPUT: 1
-}
+const topicTypeOptions = [
+  {
+    label: '精品题库',
+    value: TopicOriginType.SOUL
+  },
+  {
+    label: '知识点',
+    value: TopicOriginType.KNOW
+  },
+  {
+    label: '题书',
+    value: TopicOriginType.BOOK
+  }
+]
+
 
 function CreateHunt(props) {
   const { onSubmit } = props
-  const [selected, setSelected] = useState(1)
-  const [timeSelected, setTimeSelected] = useState(1)
-
-  const [topicMode, setTopicMode] = useState(TopicModeType.OPTION)
-  const [topicCount, setTopicCount] = useState(0)
-  const [classesSelectList, setClassesSelectList] = useState([])
+  const creator = useSelector(state => state.creator)
+  const dispatch = useDispatch()
+  const { timeSelected, openState, topicMode, topicOrigin, topicCount, classesSelectList, topicIdList, book, level, subKnow, know, title, fee, correctPrecent, personCount, desc, isShare, bid } = creator
+  const setTimeSelected = v => dispatch(setCreatorData({ timeSelected: v }))
+  const setTopicMode = v => dispatch(setCreatorData({ topicMode: v }))
+  const setTopicOrigin = v => dispatch(setCreatorData({ topicOrigin: v }))
+  const setTopicCount = v => dispatch(setCreatorData({ topicCount: v }))
+  const setClassesSelectList = v => dispatch(setCreatorData({ classesSelectList: v }))
+  const setTopicIdList = v => dispatch(setCreatorData({ topicIdList: v }))
+  const setBook = v => dispatch(setCreatorData({ book: v }))
+  const setLevel = v => dispatch(setCreatorData({ level: v }))
+  const setSubKnow = v => dispatch(setCreatorData({ subKnow: v }))
+  const setKnow = v => dispatch(setCreatorData({ know: v }))
+  const setTitle = v => dispatch(setCreatorData({ title: v }))
+  const setFee = v => dispatch(setCreatorData({ fee: v }))
+  const setCorrectPrecent = v => dispatch(setCreatorData({ correctPrecent: v }))
+  const setPersonCount = v => dispatch(setCreatorData({ personCount: v }))
+  const setIsShare = v => dispatch(setCreatorData({ isShare: v }))
+  const setDesc = v => dispatch(setCreatorData({ desc: v }))
+  const setOpenState = v => dispatch(setCreatorData({ openState: v }))
   const [topicId, setTopicId] = useState('')
-  const [topicIdList, setTopicIdList] = useState([])
+  const [bookOptions, setBookOptions] = useState([])
+  const [levelOptions, setLevelOptions] = useState([])
+  const [levelChooseOptions, setLevelChooseOptions] = useState([])
+  const [classesOptions, setClassesOptions] = useState([])
+  const [knowOptions, setKnowOptions] = useState([])
+  const [subKnowOptions, setSubKnowOptions] = useState([])
+  const [errMsg, setErrMsg] = useState('')
+
+  useEffect(() => {
+    (async () => {
+      const res = await getStartCreateBaby()
+      console.log(res);
+      const { levels, books, knows, orginfo, baby } = res.data
+      if (baby) {
+        dispatch(loadBabyData(baby))
+      }
+      const { classes } = orginfo
+      let bookOptions = books.map(book => ({ label: book.name, value: book.id }))
+      let levelOptions = levels.map(level => ({ label: level.name, value: level.num }))
+      let knowOptions = knows.map(know => ({ label: know.name, value: know.id, subs: know.subs }))
+      let classesOptions = classes.map(cls => ({ label: cls.name, value: cls.classid }))
+      console.log(knowOptions);
+      setBookOptions(bookOptions)
+      setLevelOptions(levelOptions)
+      setLevelChooseOptions(levelOptions)
+      setClassesOptions(classesOptions)
+      setKnowOptions(knowOptions)
+    })()
+  }, [])
+
+  useEffect(() => {
+    if (!subKnow) {
+      return
+    }
+    const { minlevel, maxlevel } = subKnow
+    const newLevelOptions = levelOptions.filter(option => option.value > minlevel && option.value < maxlevel)
+    setLevelChooseOptions(newLevelOptions)
+  }, [subKnow])
+
+  const handleTopicModeChange = (value, option) => {
+    setTopicOrigin(value)
+    setLevelChooseOptions(levelOptions)
+  }
+
+  const onKnowChange = (value, option) => {
+    const subs = (option?.subs || [])
+    setKnow(option)
+    setSubKnowOptions(subs.map(sub => ({ label: sub.name, value: sub.id, ...sub })))
+  }
+
+  const onSubKnowChange = (value, option) => {
+    setSubKnow(option)
+  }
 
   const deleteTopicById = id => {
     const topicIndex = topicIdList.indexOf(id)
@@ -135,34 +225,105 @@ function CreateHunt(props) {
     if (index > -1 && !checked) {
       newList.splice(index, 1)
       setClassesSelectList(newList)
-      
+
     } else if (index === -1 && checked) {
       newList.push(value)
       setClassesSelectList(newList)
     }
   }
 
-  const [fee, setFee] = useState(0)
-  const [correctPrecent, setCorrectPrecent] = useState(0)
-  const [pcount, setPCount] = useState(0)
-  const [radioValue, setRadioValue] = useState(0)
-  const options = [
-    { label: '101精品题库', value: 1 },
-    { label: '101题库', value: 2 },
-    { label: '101题库精选十九点', value: 3 },
-    { label: '101题库', value: 4 },
-    { label: '101题库', value: 5 },
-  ]
-
   const changeSelectTopicMode = () => {
     setTopicMode(topicMode === TopicModeType.OPTION ? TopicModeType.INPUT : TopicModeType.OPTION)
+  }
+
+  const getLevelFormData = () => {
+
+    const result = {
+      qlevel: level,
+      qnumber: topicCount,
+      qids: JSON.stringify([]),
+      qrange: topicOrigin
+    }
+    console.log(TopicOriginType);
+    if (topicOrigin === TopicOriginType.BOOK) {
+      result.qtypeid = book
+    } else if (topicOrigin === TopicOriginType.KNOW) {
+      result.qtypeid = subKnow.value
+    }
+
+    return result
+  }
+
+  const getQIDFormData = () => {
+    return {
+      qids: JSON.stringify(topicIdList),
+    }
+  }
+
+  const handleSubmit = async () => {
+    let formData = topicMode === TopicModeType.OPTION ?
+      getLevelFormData() :
+      getQIDFormData()
+    formData.name = title
+    formData.fee = fee
+    formData.okper = correctPrecent
+    formData.usercount = personCount
+    formData.qtime = timeSelected
+    formData.desc = desc
+    formData.isshare = isShare
+    formData.sharetype = openState
+    formData.selecttype = topicMode
+
+    if (openState === 2) {
+      formData.cids = JSON.stringify(classesSelectList)
+    }
+
+
+    const emptyValOfKey = getObjectEmptyKey(formData)
+    const errTipMaps = {
+      name: '*宝藏名称不允许为空',
+      fee: '*需要填写总金额',
+      usercount: '*需要填写人数限制',
+      okper: '*需要填写正确率',
+    }
+
+    const errMsg = errTipMaps[emptyValOfKey]
+    if (errMsg) {
+      setErrMsg(errMsg)
+      return
+    }
+
+    const res = await saveOneBaby({ bdata: JSON.stringify(formData), bid })
+    console.log(res);
+    dispatch(loadBabyData(res.data.baby))
+    dispatch(setTopics(res.data.qs))
+    onSubmit()
+  }
+
+
+  let topicOriginRestElem = [null]
+  if (topicOrigin === TopicOriginType.KNOW) {
+    topicOriginRestElem = [
+      <FormItem key="knows" label="">
+        <Select options={knowOptions} selected={know?.value} onSelected={onKnowChange} />
+      </FormItem>,
+      <FormItem key="sub-knows" label="">
+        <Select options={subKnowOptions} selected={subKnow.value} onSelected={onSubKnowChange} />
+      </FormItem>
+    ]
+  } else if (topicOrigin === TopicOriginType.BOOK) {
+    topicOriginRestElem = [
+      <FormItem key="books" label="">
+        <Select options={bookOptions} selected={book} onSelected={setBook} />
+      </FormItem>
+    ]
   }
 
   return (
     <MobilePageLayout>
       <Header level="1">创建宝藏</Header>
       <ContentBox>
-        <Input maxlength={10} size="large" placeholder="宝藏名称(限10字)" />
+        <Input value={title} onChange={setTitle} maxlength={10} size="large" placeholder="宝藏名称(限10字)" />
         <FormHeader>
           <span></span>
           <Header level="4">
@@ -187,14 +348,15 @@ function CreateHunt(props) {
               ?
               (
                 <>
-                  <FormItem label="题目来源">
-                    <Select options={options} selected={selected} onSelected={setSelected} />
+                  <FormItem key="origin" label="题目来源">
+                    <Select options={topicTypeOptions} selected={topicOrigin} onSelected={handleTopicModeChange} />
                   </FormItem>
-                  <FormItem label="题目难度">
-                    <Select options={options} selected={selected} onSelected={setSelected} />
+                  {topicOriginRestElem}
+                  <FormItem key="difficult" label="题目难度">
+                    <Select options={levelChooseOptions} selected={level} onSelected={setLevel} />
                   </FormItem>
-                  <FormItem label="题目数量">
-                    <Input width="5em" fullwidth={false} value={topicCount} onChange={setTopicCount} type="number" max={100} min={0} />
+                  <FormItem key="tcount" label="题目数量">
+                    <Input width="5em" fullwidth={false} value={topicCount} onChange={setTopicCount} type="number" max={10} min={1} />
                   </FormItem>
                 </>
               )
@@ -230,7 +392,7 @@ function CreateHunt(props) {
               )
           }
           <FormItem label="做题时间">
-            <Select options={timeOptions} selected={selected} onSelected={setSelected} />
+            <Select options={timeOptions} selected={timeSelected} onSelected={setTimeSelected} />
           </FormItem>
         </Form>
         <FormHeader>
@@ -241,7 +403,7 @@ function CreateHunt(props) {
 
         <Form labelSpan={3} labelAlign="left">
           <FormItem label="总金额">
-            <Input width="5em" fullwidth={false} value={fee} onChange={setFee} type="number" max={1000} min={0} />
+            <Input width="5em" fullwidth={false} value={fee} onChange={setFee} type="number" max={1000} min={1} />
             <Unit>元<span className="w">(手续费)</span></Unit>
           </FormItem>
           <FormItem label="要求正确率">
@@ -249,7 +411,7 @@ function CreateHunt(props) {
             <Unit>%</Unit>
           </FormItem>
           <FormItem label="人数限制">
-            <Input width="5em" fullwidth={false} value={pcount} onChange={setPCount} type="number" max={100} min={0} />
+            <Input width="5em" fullwidth={false} value={personCount} onChange={setPersonCount} type="number" max={100} min={1} />
             <Unit>人</Unit>
           </FormItem>
         </Form>
@@ -257,37 +419,40 @@ function CreateHunt(props) {
 
         <Header level="4">公开范围</Header>
         <RadioList>
-          <RadioGroup value={radioValue} onChange={setRadioValue} name="rr">
+          <RadioGroup value={openState} onChange={setOpenState} name="rr">
             <Padding v="0.5rem">
-              <Radio size="medium" value={1}>公开给所有棋友</Radio>
+              <Radio size="medium" value={0}>公开给所有棋友</Radio>
             </Padding>
             <Padding v="0.5rem">
-              <Radio size="medium" value={2}>公开给测试用</Radio>
+              <Radio size="medium" value={1}>公开给测试用</Radio>
             </Padding>
             <Padding v="0.5rem">
-              <Radio size="medium" value={3}>公开给指定班级学生</Radio>
+              <Radio size="medium" value={2}>公开给指定班级学生</Radio>
             </Padding>
           </RadioGroup>
           {
-            radioValue === 3 &&
+            openState === 2 &&
             (
               <SubRadois>
-                <Checkbox size="medium" onChange={handleClassesSelectList} value="c1">测试班级1</Checkbox>
-                <Checkbox size="medium" onChange={handleClassesSelectList} value="c2">测试班级2</Checkbox>
-                <Checkbox size="medium" onChange={handleClassesSelectList} value="c3">测试班级3</Checkbox>
+                {
+                  classesOptions.map(option => (
+                    <Checkbox size="medium" defaultChecked={classesSelectList.indexOf(option.value) > -1} onChange={handleClassesSelectList} value={option.value} key={option.label}>{option.label}</Checkbox>
+                  ))
+                }
               </SubRadois>
             )
           }
 
         </RadioList>
         <Header level="4">说明</Header>
-        <Editor style={{ marginBottom: '1em' }} />
+        <Editor value={desc} onChange={setDesc} style={{ marginBottom: '1em' }} />
         <Margin top="2rem" bottom='1rem'>
-          <Checkbox>分享到101平台（手续费20%）</Checkbox>
+          <Checkbox onChange={setIsShare} checked={isShare}>分享到101平台（手续费20%）</Checkbox>
         </Margin>
         <Center>
-          <Button width='7rem' onClick={onSubmit}>预览</Button>
+          <Button width='7rem' onClick={handleSubmit}>预览</Button>
         </Center>
+        {errMsg && <ErrMsgBox>{errMsg}</ErrMsgBox>}
       </ContentBox>
     </MobilePageLayout>
   )

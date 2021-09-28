@@ -1,10 +1,16 @@
+import { useRef } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
+import Icon from "../../components/Icon";
 import { Between } from "../../styles";
 import { Center } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
-
+import redTrashIcon from "../../images/red-trash.png"
+import { deleteTopicById } from "../../reducers/preview";
+import { useDispatch } from "react-redux";
+const QipanAPI = require('../../libs/qipan-web')
 const PreviewLayout = styled(MobilePageLayout)`
   display: flex;
   flex-direction: column;
@@ -31,6 +37,17 @@ const GridBox = styled.div`
   flex: 1;
 `
 
+const GridItemWrapper = styled.div`
+  margin: 4px;
+  color: #765228;
+  font-weight: bold;
+`
+
+const GridItemNavbar = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const GridItem = styled.div`
   padding-bottom: 100%;
   height: 0;
@@ -43,7 +60,6 @@ const GridItemContent = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  margin: 4px;
   border: 4px solid #e5b058;
 `
 
@@ -70,6 +86,18 @@ const BtnCenter = styled(Center)`
 function Preview({
   onSubmit
 }) {
+  const { creator, preview } = useSelector(state => state)
+  const dispatch = useDispatch()
+  const { bid, fee, correctPrecent, personCount } = creator
+  const { topics } = preview
+  const renderQipan = (el, topic) => {
+    if (el) {
+      QipanAPI.buildQipuThumbnail(el, topic)
+    }
+  }
+
+  const deleteTopic = topicId => dispatch(deleteTopicById(topicId, bid))
+
   return (
     <PreviewLayout>
       <Header level="1">宝藏名</Header>
@@ -79,23 +107,29 @@ function Preview({
       </Control>
       <GridBoxWrapper>
         <GridBox>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
-          <GridItem><GridItemContent></GridItemContent></GridItem>
+          {
+            topics.map(topic => {
+              return (
+                <GridItemWrapper>
+                  <GridItem>
+                    <GridItemContent ref={el => renderQipan(el, topic)}>
+                    </GridItemContent>
+                  </GridItem>
+                  <GridItemNavbar>
+                    <span>Q-{topic.qid}</span>
+                    <Icon size={1.25} src={redTrashIcon} onClick={() => deleteTopic(topic.qid)} />
+                  </GridItemNavbar>
+                </GridItemWrapper>
+              )
+            })
+          }
         </GridBox>
       </GridBoxWrapper>
       <Footer>
         <FooterInfoBar>
-          <span>宝藏:100元</span>
-          <span>正确率:100元</span>
-          <span>限100人</span>
+          <span>宝藏:{fee}元</span>
+          <span>正确率:{correctPrecent}元</span>
+          <span>限{personCount}人</span>
         </FooterInfoBar>
         <BtnCenter>
           <Button onClick={onSubmit}>生成宝藏</Button>

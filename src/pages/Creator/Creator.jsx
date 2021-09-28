@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react"
-import { CSSTransition, SwitchTransition, TransitionGroup } from "react-transition-group"
+import { useState } from "react"
+import { CSSTransition, SwitchTransition } from "react-transition-group"
 import styled from "styled-components"
 import StepBar from "../../components/StepBar"
 import creatorBgImg from '../../images/creator-bg.jpg'
@@ -47,6 +47,7 @@ const CreatorBox = styled.div`
     flex-wrap: nowrap;
   }
 `
+
 const pageKeys = [
   'creator',
   'preview',
@@ -58,8 +59,6 @@ function Creator() {
 
   const [progress, setProgress] = useState(0)
   const [show, setShow] = useState(0)
-  const [selected, onSelected] = useState(1)
-  const [checked, onChecked] = useState(false)
 
   const onSubmit = () => {
     if (2 > progress) {

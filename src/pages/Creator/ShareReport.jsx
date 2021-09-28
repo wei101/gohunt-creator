@@ -48,7 +48,7 @@ export default function ShareReport({ onSubmit }) {
 
         <CardContentLayout>
           <Hongbao>
-            <img src={HBImg} />
+            <img src={HBImg} alt="" />
             <span className="fee">100</span>
           </Hongbao>
           <div className="total-fee">奖金100元</div>

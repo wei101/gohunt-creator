@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 const SelectBox = styled.div`
   display: block;
   white-space: nowrap;
+  text-overflow: ellipse;
   font-size: ${props => fontSizeMaps[props.size || 'medium']};
   text-align: center;
   color: #694216;
@@ -22,15 +23,14 @@ const Options = styled.div`
   position: absolute;
   width: 100%;
   z-index: 9;
+  max-height: 15em;
+  overflow-y: auto;
+  border-radius: 0 0 1.5em 1.5em;
 `
 
 const Option = styled.div`
   background-color: ${props => props.active ? '#ffbb00' : '#f0e8ba'};
   z-index: 10;
-
-  &:last-child {
-    border-radius: 0 0 1.5em 1.5em;
-  }
 
   &:nth-child(odd) {
     background-color: ${props => props.active ? '#ffbb00' : '#e8dfa8'};
@@ -44,6 +44,7 @@ const TopicBox = styled.div`
   box-sizing: border-box;
   border-radius: ${props => props.show ? '1.5em 1.5em 0 0' : '1.5em'};
   background-color: #f0e8ba;
+  height: 2.5em;
 
   &::after {
     display: block;
@@ -77,15 +78,12 @@ function Select(props) {
 
   let currentOption = options.find(o => o.value === selected)
   if (!currentOption) {
-    currentOption = options.length > 0 ? options[0] : NullOption;
+    currentOption = NullOption;
   }
 
   useEffect(() => {
-    if (!selected) {
-      onSelected(currentOption.value)
-    }
 
-    const handleOutClick =  e => {
+    const handleOutClick = e => {
       if (selectRef.current && !selectRef.current.contains(e.target)) {
         setShow(false)
       }
@@ -98,8 +96,15 @@ function Select(props) {
     }
   }, [])
 
+  useEffect(() => {
+    let currentOption = options.find(o => o.value === selected)
+    if (!currentOption && options.length > 0) {
+      onSelected(options[0].value, options[0])
+    }
+  }, [options])
+
   const handleSelected = (option) => {
-    onSelected(option.value)
+    onSelected(option.value, option)
     setShow(false)
   }
 
@@ -115,7 +120,7 @@ function Select(props) {
 
 
   return (
-    <SelectBox ref={selectRef}  onBlur={() => console.log('blur')}>
+    <SelectBox ref={selectRef}>
       <Topic show={show} onClick={toggle}>{currentOption.label}</Topic>
       {
         show &&

@@ -58,11 +58,12 @@ const SelectItem = styled.div`
 `
 
 function Editor({
-  style
+  style,
+  value,
+  onChange
 }) {
 
   const [openBox, setOpenBox] = useState(false)
-  const [editText, onEditChange] = useState('')
   const msgs = [
     'hello world!',
     'hello world!',
@@ -72,7 +73,7 @@ function Editor({
   ]
   const toggleOpenBox = () => setOpenBox(!openBox)
   const insertMsg = msg => {
-    onEditChange(editText + msg)
+    onChange(value + msg)
     toggleOpenBox()
   }
 
@@ -90,9 +91,11 @@ function Editor({
               }
             </SelectList>
             :
-            <TextArea onChange={e => {
-              onEditChange(e.target.value)
-            }}>{editText}</TextArea>
+            <TextArea
+              defaultValue={value}
+              onChange={e => {
+                onChange(e.target.value)
+              }}></TextArea>
         }
       </Content>
       <OpenBoxBtn onClick={toggleOpenBox}>

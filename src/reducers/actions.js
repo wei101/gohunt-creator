@@ -1,0 +1,3 @@
+export const SET_CREATOR_DATA = 'SET_CREATOR_DATA'
+export const SET_TOPICS = 'SET_TOPICS'
+export const DELETE_TOPIC_BY_ID = 'DELETE_TOPIC_BY_ID'
