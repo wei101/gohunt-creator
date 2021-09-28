@@ -102,7 +102,8 @@ const TopicModeType = {
   INPUT: 1
 }
 
-function CreateHunt({ onSubmit }) {
+function CreateHunt(props) {
+  const { onSubmit } = props
   const [selected, setSelected] = useState(1)
   const [timeSelected, setTimeSelected] = useState(1)
 
