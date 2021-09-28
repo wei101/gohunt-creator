@@ -108,3 +108,17 @@ export const HuntDetail = styled.ul`
     font-weight: bold;
   }
 `
+
+export const Padding = styled.div`
+  padding: ${props => {
+    const { h = 0, v = 0 } = props
+    return `${v} ${h}`
+  }}
+`
+
+export const Margin = styled.div`
+  margin: ${props => {
+    const { h = 0, v = 0, top = 0, bottom = 0, left = 0, right = 0 } = props
+    return `${v || top} ${h || right} ${v || bottom} ${h || left}`
+  }}
+`

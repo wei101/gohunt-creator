@@ -10,6 +10,15 @@ const PageLayout = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+
+  @media screen and (max-width: 768px) {
+    width: 24em;
+  }
+  
+  @media screen and (max-width: 576px) {
+    width: 90%;
+  }
+  
 `
 
 export function MobilePageLayout({children, ...rest}) {

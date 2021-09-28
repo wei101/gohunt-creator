@@ -1,18 +1,13 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  font-size: 20px;
-  min-width: 960px;
+  min-width: 300px;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 * {
@@ -23,14 +18,35 @@ code {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   border-radius: 3px;
-  background: rgba(0,0,0,0.06);
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.08);
+  background: rgba(0, 0, 0, 0.06);
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);
 }
+
 /* 滚动条滑块 */
+
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
-  background: rgba(0,0,0,0.12);
-  -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.12);
+  -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (min-width: 576px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    font-size: 17px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  body {
+    font-size: 20px;
+  }
 }

@@ -12,7 +12,7 @@ import Icon from "../../components/Icon";
 import covertImg from "../../images/convert.png"
 import deleteImg from "../../images/delete.png"
 import addImg from "../../images/add.png"
-import { Center } from "../../styles";
+import { Center, Margin, Padding } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
 
 const ContentBox = styled.div`
@@ -40,10 +40,12 @@ const RadioList = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0.8rem 0;
+  font-weight: bold;
 `
 
 const SubRadois = styled(RadioList)`
-  padding-left: 2em;
+  padding-left: 1rem;
+  font-weight: normal;
 
   & > * {
     margin-bottom: 0.5rem;
@@ -109,7 +111,7 @@ function CreateHunt(props) {
 
   const [topicMode, setTopicMode] = useState(TopicModeType.OPTION)
   const [topicCount, setTopicCount] = useState(0)
-  const [checked, setChecked] = useState(false)
+  const [classesSelectList, setClassesSelectList] = useState([])
   const [topicId, setTopicId] = useState('')
   const [topicIdList, setTopicIdList] = useState([])
 
@@ -124,6 +126,19 @@ function CreateHunt(props) {
     if (topicId !== '' && topicIdList.indexOf(topicId) === -1) {
       setTopicIdList([...topicIdList, topicId])
       setTopicId('')
+    }
+  }
+
+  const handleClassesSelectList = (checked, value) => {
+    const index = classesSelectList.indexOf(value)
+    const newList = [...classesSelectList]
+    if (index > -1 && !checked) {
+      newList.splice(index, 1)
+      setClassesSelectList(newList)
+      
+    } else if (index === -1 && checked) {
+      newList.push(value)
+      setClassesSelectList(newList)
     }
   }
 
@@ -243,23 +258,35 @@ function CreateHunt(props) {
         <Header level="4">公开范围</Header>
         <RadioList>
           <RadioGroup value={radioValue} onChange={setRadioValue} name="rr">
-            <Radio size="mini" checked={checked} onChange={setChecked} value={1}>公开给所有棋友</Radio>
-            <Radio size="mini" checked={checked} onChange={setChecked} value={2}>公开给测试用</Radio>
-            <Radio size="mini" checked={checked} onChange={setChecked} value={3}>公开给指定班级学生</Radio>
+            <Padding v="0.5rem">
+              <Radio size="medium" value={1}>公开给所有棋友</Radio>
+            </Padding>
+            <Padding v="0.5rem">
+              <Radio size="medium" value={2}>公开给测试用</Radio>
+            </Padding>
+            <Padding v="0.5rem">
+              <Radio size="medium" value={3}>公开给指定班级学生</Radio>
+            </Padding>
           </RadioGroup>
-          <SubRadois>
-            <Checkbox size="mini" checked={checked} onChange={setChecked}>测试班级1</Checkbox>
-            <Checkbox size="mini" checked={checked} onChange={setChecked}>测试班级2</Checkbox>
-            <Checkbox size="mini" checked={checked} onChange={setChecked}>测试班级3</Checkbox>
-          </SubRadois>
+          {
+            radioValue === 3 &&
+            (
+              <SubRadois>
+                <Checkbox size="medium" onChange={handleClassesSelectList} value="c1">测试班级1</Checkbox>
+                <Checkbox size="medium" onChange={handleClassesSelectList} value="c2">测试班级2</Checkbox>
+                <Checkbox size="medium" onChange={handleClassesSelectList} value="c3">测试班级3</Checkbox>
+              </SubRadois>
+            )
+          }
+
         </RadioList>
         <Header level="4">说明</Header>
         <Editor style={{ marginBottom: '1em' }} />
-        <div>
-          <Checkbox size="0.8">分享到101平台（手续费20%）</Checkbox>
-        </div>
+        <Margin top="2rem" bottom='1rem'>
+          <Checkbox>分享到101平台（手续费20%）</Checkbox>
+        </Margin>
         <Center>
-          <Button width='5em' onClick={onSubmit}>预览</Button>
+          <Button width='7rem' onClick={onSubmit}>预览</Button>
         </Center>
       </ContentBox>
     </MobilePageLayout>

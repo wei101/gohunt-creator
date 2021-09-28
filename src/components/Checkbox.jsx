@@ -1,3 +1,4 @@
+import { useState } from "react"
 import styled from "styled-components"
 import yesImg from "../images/yes.png"
 import { fontSizeMaps } from "./forms/formsStyle"
@@ -6,8 +7,9 @@ const LabelBox = styled.label`
   align-items: center;
   color: #603708;
   cursor: pointer;
-  font-size: ${props => (fontSizeMaps[props.size] || props.size) + 'em'}
+  font-size: ${props => fontSizeMaps[props.size] || (props.size + 'rem')}
 `
+
 
 const CheckboxShow = styled.div`
   width: 1em;
@@ -25,22 +27,28 @@ const CheckboxElem = styled.input`
   display: none;
 `
 
-function Checkbox({
-  children,
-  name,
-  checked,
-  size = 'medium',
-  onChange = () => { }
-}) {
-
+function Checkbox(props) {
+  const {
+    children,
+    name,
+    size = 'medium',
+    onChange = () => { }
+  } = props
+  const [innerChecked, setInnerChecked] = useState(false)
   const handleChecked = e => {
-    onChange(e.target.checked)
+    if (!props.hasOwnProperty('checked')) {
+      setInnerChecked(e.target.checked)
+    }
+
+    onChange(e.target.checked, props.value)
   }
+
+  const finalChecked = props?.checked || innerChecked
 
   return (
     <LabelBox size={size}>
-      <CheckboxShow checked={checked} />
-      <CheckboxElem type="checkbox" name={name} defaultChecked={checked} onChange={handleChecked} />
+      <CheckboxShow checked={finalChecked} />
+      <CheckboxElem type="checkbox" name={name} defaultChecked={finalChecked} onChange={handleChecked} />
       {children}
     </LabelBox>
   )

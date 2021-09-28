@@ -7,7 +7,7 @@ const LabelBox = styled.label`
   align-items: center;
   color: #603708;
   cursor: pointer;
-  font-size: ${props => (fontSizeMaps[props.size] || props.size) + 'em'}
+  font-size: ${props => fontSizeMaps[props.size] || (props.size + 'rem')}
 `
 
 const RadioShow = styled.div`

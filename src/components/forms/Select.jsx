@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { fontSizeMaps } from "./formsStyle";
 import selectArrowImg from "../../images/select-arrow.png"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SelectBox = styled.div`
   display: block;
@@ -40,7 +40,7 @@ const Option = styled.div`
 const TopicBox = styled.div`
   position: relative;
   width: 100%;
-  padding: 0 3em 0 2em;
+  padding: 0 2em 0 2em;
   box-sizing: border-box;
   border-radius: ${props => props.show ? '1.5em 1.5em 0 0' : '1.5em'};
   background-color: #f0e8ba;
@@ -57,8 +57,8 @@ const TopicBox = styled.div`
     margin: auto;
     width: 1.2em;
     height: 1.2em;
-    transform: rotate(-90deg);
-    transitoin: transform .4s linear;
+    transform: ${props => props.show ? 'rotate(-180deg)' : 'rotate(-90deg)'};
+    transition: transform .1s linear;
   }
 `
 const NullOption = { label: ' ', value: Number.MAX_VALUE }
@@ -73,20 +73,39 @@ function Select(props) {
   const [show, setShow] = useState(false)
   const toggle = () => setShow(!show)
 
+  const selectRef = useRef(null)
+
   let currentOption = options.find(o => o.value === selected)
   if (!currentOption) {
     currentOption = options.length > 0 ? options[0] : NullOption;
   }
-  
+
   useEffect(() => {
     if (!selected) {
-      onSelected(currentOption)
+      onSelected(currentOption.value)
+    }
+
+    const handleOutClick =  e => {
+      if (selectRef.current && !selectRef.current.contains(e.target)) {
+        setShow(false)
+      }
+    }
+
+    document.addEventListener('click', handleOutClick)
+
+    return () => {
+      document.removeEventListener('click', handleOutClick)
     }
   }, [])
 
+  const handleSelected = (option) => {
+    onSelected(option.value)
+    setShow(false)
+  }
+
   const optionElems = options.map(option => {
     return <Option
-      onClick={() => onSelected(option.value)}
+      onClick={() => handleSelected(option)}
       active={currentOption.value === option.value}
       key={option.label}
     >
@@ -96,9 +115,8 @@ function Select(props) {
 
 
   return (
-    <SelectBox>
+    <SelectBox ref={selectRef}  onBlur={() => console.log('blur')}>
       <Topic show={show} onClick={toggle}>{currentOption.label}</Topic>
-
       {
         show &&
         <Options>{optionElems}</Options>

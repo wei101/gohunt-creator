@@ -27,6 +27,12 @@ const CreatorBox = styled.div`
     .stepbar {
       flex: 3;
     }
+
+    @media screen and (max-width: 576px) {
+      .stepbar {
+        flex: 10;
+      }
+    }
   }
 
   .content {
@@ -54,7 +60,7 @@ function Creator() {
   const [show, setShow] = useState(0)
   const [selected, onSelected] = useState(1)
   const [checked, onChecked] = useState(false)
- 
+
   const onSubmit = () => {
     if (2 > progress) {
       setProgress(progress + 1)
@@ -63,7 +69,7 @@ function Creator() {
   }
 
   const CurrentPage = comps[progress]
-  return (  
+  return (
     <CreatorBox>
       <div className="header">
         <div className="tmp"></div>
