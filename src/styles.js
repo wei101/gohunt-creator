@@ -51,6 +51,7 @@ export const CardContentLayout = styled.div`
     color: #e7610f;
     font-weight: bold;
     padding-bottom: 0.8rem;
+    color: #603708;
   }
 `
 
