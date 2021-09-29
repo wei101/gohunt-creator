@@ -1,4 +1,4 @@
-import { useHistory } from "react-router"
+import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import Avatar from "../components/Avatar"
 import Button from "../components/Button"
@@ -20,18 +20,11 @@ const NavWrapper = styled.div`
 function Navigator() {
 
     const history = useHistory()
-
-    const goBack = history?.length
-
-    const handleGoBack = () => history.goBack()
+    console.log(history);
+    const handleGoBack = () => location.hash === '#/' ? location.href = 'https://www.101weiqi.com/' : history.goBack()
     return (
         <NavWrapper>
-            {goBack
-                ?
-                <Button onClick={handleGoBack} icon={<Icon src={BackBtnImg} />}></Button>
-                :
-                <span></span>
-            }
+            <Button onClick={handleGoBack} icon={<Icon src={BackBtnImg} />}></Button>
             <Avatar />
         </NavWrapper>
     )

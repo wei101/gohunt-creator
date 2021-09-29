@@ -5,6 +5,9 @@ import HBImg from "../../images/wwb.png"
 import Button from "../../components/Button"
 import { useSelector } from "react-redux"
 import { HuntRangeType } from "../../types"
+import Modal from "../../components/Modal"
+import { useEffect, useState } from "react"
+import { genBabyCode } from "../../apis"
 
 const ShareReportLayout = styled(MobilePageLayout)`
   display: flex;
@@ -39,10 +42,27 @@ const ButtonCenter = styled(Center)`
   }
 `
 
+const QrCodeImg = styled.img`
+  width: 15em;
+`
+
 export default function ShareReport({ onSubmit }) {
 
   const creator = useSelector(state => state.creator)
   const restcount = Math.max(creator.personCount - creator.wincount, 0)
+
+  const [imgUrl, setImgUrl] = useState('')
+  const [showQrCodeModal, setShowQrCodeModal] = useState(false)
+  const closeQrCodeModal = () => setShowQrCodeModal(false)
+
+  useEffect(() => {
+    (async () => {
+      const res = await genBabyCode(creator.bid)
+      if (res.data.result == 0) {
+        setImgUrl(res.data.qrcode)
+      }
+    })()
+  }, [])
 
   return (
     <ShareReportLayout>
@@ -72,9 +92,11 @@ export default function ShareReport({ onSubmit }) {
         </CardContentLayout>
       </div>
       <ButtonCenter>
-        <Button className="btn" color="#56a16e" width="10em">开始解题</Button>
-        <Button width="10em" onClick={onSubmit}>分享宝藏</Button>
+        <Button width="10em" onClick={() => setShowQrCodeModal(true)}>分享宝藏</Button>
       </ButtonCenter>
+      <Modal visible={showQrCodeModal} onClose={closeQrCodeModal}>
+        <QrCodeImg alt="" src={imgUrl} />
+      </Modal>
     </ShareReportLayout>
   )
 }

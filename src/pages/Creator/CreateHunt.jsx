@@ -19,7 +19,7 @@ import { TopicModeType, TopicOriginType } from "../../types";
 import { useDispatch } from "react-redux";
 import { loadBabyData, setCreatorData } from "../../reducers/creator";
 import { useSelector } from "react-redux";
-import { getObjectEmptyKey } from "../../utils";
+import { arrToSeconds, getObjectEmptyKey, parseSeconds } from "../../utils";
 import { setTopics } from "../../reducers/preview";
 import Modal from "../../components/Modal";
 
@@ -128,12 +128,46 @@ const topicTypeOptions = [
   }
 ]
 
+const PublishDateSelectBox = styled.div`
+  display: flex;
+  justify-items: stretch;
+
+  & > div {
+    flex: 1;
+    margin-right: 0.2rem;
+  }
+`
+
+const yearOptions = [2021, 2022, 2023].map((i) => ({
+  label: i,
+  value: i
+}))
+
+const monthOptions = new Array(12).fill(0).map((_, i) => ({
+  label: i + 1,
+  value: i + 1
+}))
+
+const dateOptions = new Array(31).fill(0).map((_, i) => ({
+  label: i + 1,
+  value: i + 1
+}))
+
+const hourOptions = new Array(24).fill(0).map((_, i) => ({
+  label: i,
+  value: i
+}))
+
+const minuteOptions = new Array(12).fill(0).map((_, i) => ({
+  label: i * 5,
+  value: i * 5
+}))
 
 function CreateHunt(props) {
   const { onSubmit } = props
   const creator = useSelector(state => state.creator)
   const dispatch = useDispatch()
-  const { timeSelected, openState, topicMode, topicOrigin, topicCount, classesSelectList, topicIdList, book, level, subKnow, know, title, fee, correctPrecent, personCount, desc, isShare, bid } = creator
+  const { timeSelected, openState, topicMode, topicOrigin, topicCount, classesSelectList, topicIdList, book, level, subKnow, know, title, fee, correctPrecent, personCount, desc, isShare, bid, startTime } = creator
   const setTimeSelected = v => dispatch(setCreatorData({ timeSelected: v }))
   const setTopicMode = v => dispatch(setCreatorData({ topicMode: v }))
   const setTopicOrigin = v => dispatch(setCreatorData({ topicOrigin: v }))
@@ -151,6 +185,7 @@ function CreateHunt(props) {
   const setIsShare = v => dispatch(setCreatorData({ isShare: v }))
   const setDesc = v => dispatch(setCreatorData({ desc: v }))
   const setOpenState = v => dispatch(setCreatorData({ openState: v }))
+  const setStartTime = v => dispatch(setCreatorData({ startTime: v }))
   const [topicId, setTopicId] = useState('')
   const [bookOptions, setBookOptions] = useState([])
   const [levelOptions, setLevelOptions] = useState([])
@@ -159,8 +194,70 @@ function CreateHunt(props) {
   const [knowOptions, setKnowOptions] = useState([])
   const [subKnowOptions, setSubKnowOptions] = useState([])
   const [errMsg, setErrMsg] = useState('')
+  const [publishTimes, setPublishTimes] = useState([yearOptions[0].value, monthOptions[0].value, dateOptions[0].value, hourOptions[0].value, minuteOptions[0].value])
+
+  const [publishYearOptions, setPublishYearOptions] = useState(yearOptions)
+  const [publishMonthOptions, setPublishMonthOptions] = useState(monthOptions)
+  const [publishDateOptions, setPublishDateOptions] = useState(dateOptions)
+  const [publishHourOptions, setPublishHourOptions] = useState(hourOptions)
+  const [publishMinuteOptions, setPublishMinuteOptions] = useState(minuteOptions)
+
+  const updatePublishTimes = (value, index) => {
+    const newTimes = [...publishTimes]
+    newTimes[index] = value
+    setPublishTimes(newTimes)
+  }
+  // useEffect(() => {
+  //   const now = new Date()
+  //   const year = publishTimes[0]
+  //   if (year === now.getFullYear) {
+  //     const nowMonth = now.getMonth()
+  //     const newYearsOptions = new Array(12 - nowMonth).fill(0).map((_, i) => ({
+  //       label: i + nowMonth + 1,
+  //       value: i + nowMonth
+  //     }))
+
+  //     set
+  //   }
+  // }, [publishYearOptions])
+
+  // const updatePublishTimesOptions = () => {
+  //   const [year, month, date, hour, minute] = publishTimes
+  //   const newPublishTime = [...publishTimes]
+  //   const newPublishTimeOptions = [...publishTimesOptions]
+
+  //   const nowMonth = now.getMonth()
+  //   if (year === now.getFullYear()) {
+  //     newPublishTimeOptions[1] = new Array(12 - nowMonth).fill(0).map((_, i) => ({
+  //       label: i + nowMonth + 1,
+  //       value: i + nowMonth
+  //     }))
+  //     newPublishTime[1] = nowMonth
+  //     const nowDate = now.getDate()
+  //     if (month === nowMonth) {
+  //       const maxDateInNowMonth = new Date(year, month, 0).getDate()
+  //       newPublishTimeOptions[2] = new Array(maxDateInNowMonth - nowDate).fill(0).map((_, i) => ({
+  //         label: i + nowDate,
+  //         value: i + nowMonth
+  //       }))
+  //       newPublishTime[2] = nowDate
+  //     }
+
+
+  //     setPublishOptions(newPublishTimeOptions)
+  //     setPublishTimes(newPublishTime)
+  //   }
+  // }
 
   useEffect(() => {
+    if (startTime) {
+      const pt = parseSeconds(startTime)
+      setPublishTimes(pt)
+    }
+  }, [startTime])
+
+  useEffect(() => {
+
     (async () => {
       const res = await getStartCreateBaby()
       console.log(res);
@@ -177,6 +274,7 @@ function CreateHunt(props) {
       setBookOptions(bookOptions)
       setLevelOptions(levelOptions)
       setLevelChooseOptions(levelOptions)
+      setLevel(levelOptions[0].value)
       setClassesOptions(classesOptions)
       setKnowOptions(knowOptions)
     })()
@@ -284,6 +382,11 @@ function CreateHunt(props) {
     formData.isshare = isShare
     formData.sharetype = openState
     formData.selecttype = topicMode
+    formData.myear = publishTimes[0]
+    formData.mmonth = publishTimes[1]
+    formData.mday = publishTimes[2]
+    formData.mhour = publishTimes[3]
+    formData.mminute = publishTimes[4]
 
     if (openState === 2) {
       formData.cids = JSON.stringify(classesSelectList)
@@ -457,6 +560,18 @@ function CreateHunt(props) {
         </RadioList>
         <Header level="4">说明</Header>
         <Editor value={desc} onChange={setDesc} style={{ marginBottom: '1em' }} />
+        <FormHeader>
+          <span></span>
+          <Header level="4">发布时间</Header>
+          <span></span>
+        </FormHeader>
+        <PublishDateSelectBox>
+          <Select selected={publishTimes[0]} onSelected={v => updatePublishTimes(v, 0)} inline={true} options={publishYearOptions} />
+          <Select selected={publishTimes[1]} onSelected={v => updatePublishTimes(v, 1)} inline={true} options={publishMonthOptions} />
+          <Select selected={publishTimes[2]} onSelected={v => updatePublishTimes(v, 2)} inline={true} options={publishDateOptions} />
+          <Select selected={publishTimes[3]} onSelected={v => updatePublishTimes(v, 3)} inline={true} options={publishHourOptions} />
+          <Select selected={publishTimes[4]} onSelected={v => updatePublishTimes(v, 4)} inline={true} options={publishMinuteOptions} />
+        </PublishDateSelectBox>
         <Margin top="2rem" bottom='1rem'>
           <Checkbox onChange={setIsShare} checked={isShare}>分享到101平台（手续费20%）</Checkbox>
         </Margin>

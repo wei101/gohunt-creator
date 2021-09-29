@@ -18,12 +18,12 @@ const AppBox = styled.div`
   flex-direction: column;
 `
 
-function App() { 
-  
+function App() {
+
   return (
     <AppBox>
-      <Navigator />
       <Router>
+        <Navigator />
         <Switch>
           <Route path="/creator">
             <Creator />

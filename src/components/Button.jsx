@@ -5,6 +5,7 @@ const ButtonColor = {
   success: '#559e6e',
   primary: '#5e84cc',
   danger: '#db6933',
+  translate: 'rgba(0, 0, 0, 0)'
 }
 
 const BorderColor = {
@@ -39,13 +40,13 @@ const IconBtn = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background-color: ${props => props.color || '#5e84cc'};
+  background-color: ${props => ButtonColor[props.color || 'translate']};
   border-radius: 100%;
   width: ${props => props.width || 'auto'};
   height: ${props => props.width || 'auto'};
 `
 function Button(props) {
-  const { children, icon, size = "medium", color = "primary", width } = props
+  const { children, icon, size = "medium", color, width } = props
 
   if (icon) {
     return (

@@ -2,10 +2,11 @@ import { getBabyById } from "../apis";
 import { TopicModeType, TopicOriginType } from "../types";
 import { SET_CREATOR_DATA } from "./actions";
 
+const now = new Date()
 const initialState = {
   bid: 0,
   title: '',
-  fee: 1,
+  fee: 10,
   timeSelected: 5,
   topicMode: TopicModeType.OPTION,
   topicOrigin: TopicOriginType.SOUL,
@@ -16,12 +17,13 @@ const initialState = {
   level: null,
   know: {},
   subKnow: {},
-  correctPrecent: 0,
+  correctPrecent: 1,
   personCount: 1,
   desc: "",
   isShare: false,
   openState: 0,
-  username: ''
+  username: '',
+  startTime: Math.floor(now.getTime() / 300000) * 300
 }
 
 export function setCreatorData(data) {
@@ -61,7 +63,8 @@ export function loadBabyData(baby) {
     isShare: baby.isshare,
     openState: baby.sharetype,
     username: baby.username,
-    wincount: baby.wincount
+    wincount: baby.wincount,
+    startTime: baby.startt
   }
 
   if (data.topicOrigin === TopicOriginType.BOOK) {

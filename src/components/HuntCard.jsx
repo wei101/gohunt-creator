@@ -104,6 +104,7 @@ const MsgBoxDiv = styled.div`
 
 const InfoFooterDiv = styled.div`
   display: flex;
+  position: relative;
 `
 
 const HuntDetail = styled.ul`
@@ -128,12 +129,24 @@ const HuntDetail = styled.ul`
   }
 `
 
+const QrCodeImg = styled.img`
+  position: absolute;
+  bottom: 0em;
+  right: -1em;
+  width: 5em;
+  height: 5em;
+  background-color: white;
+  border-radius: 100%;
+  cursor: pointer;
+`
+
 function HuntCard({
   data,
   onDelete = () => { },
   onEdit = () => { },
+  onPreview = () => { },
 }) {
-  let { name, usercount, fee, date, docount, okper, qnumber, desc, status, startt } = data
+  let { name, usercount, fee, date, docount, okper, qnumber, desc, status, startt, qcrimgpath } = data
   status = 1
   const Status = StateTipSpanMaps[status]
 
@@ -147,8 +160,8 @@ function HuntCard({
         </div>
         <div>{date}创建</div>
         <Commands>
-          <Button onClick={onDelete} width='1.5rem' icon={<Icon size={1.1} src={trashIcon} />} />
-          <Button onClick={onEdit} width='1.5rem' icon={<Icon size={1.1} src={editIcon} />} />
+          <Button onClick={onDelete} width='1.5rem' color="primary" icon={<Icon size={1.1} src={trashIcon} />} />
+          <Button onClick={onEdit} width='1.5rem' color="primary" icon={<Icon size={1.1} src={editIcon} />} />
         </Commands>
       </Header>
       <Content>
@@ -167,6 +180,7 @@ function HuntCard({
             <li><span className="name-label">分享范围:</span><span className="value-label">仅本教室学生可见</span></li>
           </HuntDetail>
           <span></span>
+          {qcrimgpath && <QrCodeImg onClick={onPreview} alt="" src={qcrimgpath} />}
         </InfoFooterDiv>
       </Content>
     </HuntCardWrapper>

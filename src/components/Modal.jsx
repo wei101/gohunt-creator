@@ -75,38 +75,21 @@ function Modal({
 }
 
 
-const show = (message) => {
-  return new Promise((resolve, reject) => {
-    const container = document.getElementById('root')
-    const cv = document.createElement("div")
-    container.appendChild(cv)
-
-    const removeElem = () => {
-      ReactDOM.unmountComponentAtNode(cv)
-      container.removeChild(cv)
-    }
-
-    ReactDOM.render(<Modal visible={true} onClose={removeElem} actions={[
-      {
-        label: '确定',
-        callback: () => {
-          resolve()
-          removeElem()
-        }
-      },
-      {
-        label: '取消',
-        callback: () => {
-          reject()
-          removeElem()
-        }
-      }
-    ]}>
-      <Center>
-        {message}
-      </Center>
-    </Modal>, cv)
-  })
+const show = (message, actions = []) => {
+  const container = document.getElementById('root')
+  const cv = document.createElement("div")
+  container.appendChild(cv)
+  const removeElem = () => {
+    ReactDOM.unmountComponentAtNode(cv)
+    container.removeChild(cv)
+  }
+  const withCloseActions = actions.map(action => ({...action, callback: () => action.callback(removeElem)}))
+  
+  ReactDOM.render(<Modal visible={true} onClose={removeElem} actions={withCloseActions}>
+    <Center>
+      {message}
+    </Center>
+  </Modal>, cv)
 
 }
 

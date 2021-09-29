@@ -76,6 +76,10 @@ const HuntPosImg = styled.img`
   background-position: center;
 `
 
+const QrCodeImg = styled.img`
+  width: 15em;
+`
+
 const states = [
   'create',
   'open',
@@ -105,18 +109,26 @@ function Home() {
   }, [])
 
   const deleteBabyById = async bid => {
-    Modal.show('确认删除?').then(async () => {
-      const res = await deleteOneBaby(bid)
-      if (res.data.result !== 0) {
-        return
+    Modal.show('确认删除?', [{
+      label: '确定',
+      callback: async closeModal => {
+        const res = await deleteOneBaby(bid)
+        if (res.data.result !== 0) {
+          return
+        }
+        const deleteBabyIndex = treasures.findIndex(t => t.id === bid)
+        if (deleteBabyIndex > -1) {
+          const newTreasures = [...treasures]
+          newTreasures.splice(deleteBabyIndex, 1)
+          setTreasures(newTreasures)
+        }
+
+        closeModal()
       }
-      const deleteBabyIndex = treasures.findIndex(t => t.id === bid)
-      if (deleteBabyIndex > -1) {
-        const newTreasures = [...treasures]
-        newTreasures.splice(deleteBabyIndex, 1)
-        setTreasures(newTreasures)
-      }
-    })
+    }, {
+      label: '取消',
+      callback: async closeModal => closeModal()
+    }])
   }
 
   const editHunt = async bid => {
@@ -125,6 +137,10 @@ function Home() {
         history.push('/creator')
       }
     })
+  }
+
+  const showLargeQrCodeImg = (imgUrl) => {
+    Modal.show(<QrCodeImg src={imgUrl} />)
   }
 
   return (
@@ -138,6 +154,7 @@ function Home() {
                 <HuntCard
                   onDelete={() => deleteBabyById(t.id)}
                   onEdit={() => editHunt(t.id)}
+                  onPreview={() => showLargeQrCodeImg(t.qcrimgpath)}
                   key={t.id}
                   data={t}
                 />

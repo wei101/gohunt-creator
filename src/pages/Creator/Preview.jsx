@@ -133,6 +133,14 @@ function Preview({
   }
 
   const handleSubmit = async () => {
+    if (topics.length === 0) {
+      Modal.show('题目不得为空!', [{
+        label: '确认',
+        callback: close => close()
+      }])
+      return
+    }
+
     dispatch(doPay(bid, payDone => {
       if (payDone) {
         onSubmit()

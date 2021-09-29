@@ -50,6 +50,10 @@ export async function getStartCreateBaby() {
   return await $axios.get('/red/startcreatebaby/')
 }
 
+export async function genBabyCode(bid) {
+  return await $axios.get(`/red/genbabycode/${bid}/`)
+}
+
 export async function saveOneBaby(data) {
   return await $axios({
     method: 'POST',
