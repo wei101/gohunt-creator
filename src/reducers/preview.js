@@ -2,7 +2,7 @@ import { addOneQuestion, deleteOneQuestion } from "../apis";
 import { ADD_TOPIC_BY_ID, DELETE_TOPIC_BY_ID, SET_CREATOR_DATA, SET_TOPICS } from "./actions";
 
 const initialState = {
-  topics: []
+  topics: [],
 }
 
 export function setTopics(data) {
@@ -35,7 +35,6 @@ export function addTopicById(topicId, bid) {
     const state = getState()
 
     const existsTopicIndex = state.preview.topics.findIndex(topic => topic.qid == Number(topicId)) || -1
-    console.log(existsTopicIndex);
     if (existsTopicIndex > -1) {
       return
     }

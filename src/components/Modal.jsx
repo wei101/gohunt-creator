@@ -58,7 +58,7 @@ export default function Modal({
   }
 
   return (
-    <ModalWrapper >
+    <ModalWrapper>
       <ModalDiv>
         <ModalContent>
           <CloseBtn onClick={onClose} />

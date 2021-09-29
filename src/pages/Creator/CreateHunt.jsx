@@ -21,6 +21,7 @@ import { loadBabyData, setCreatorData } from "../../reducers/creator";
 import { useSelector } from "react-redux";
 import { getObjectEmptyKey } from "../../utils";
 import { setTopics } from "../../reducers/preview";
+import Modal from "../../components/Modal";
 
 const ContentBox = styled.div`
   padding: 1em 2em;
@@ -185,6 +186,15 @@ function CreateHunt(props) {
     if (!subKnow) {
       return
     }
+
+    if (!know) {
+      const knowName = subKnow.name.split(":")[0] || ''
+      const option = knowOptions.find(op => op.label === knowName)
+      if (option) {
+        setKnow(option)
+      }
+    }
+
     const { minlevel, maxlevel } = subKnow
     const newLevelOptions = levelOptions.filter(option => option.value > minlevel && option.value < maxlevel)
     setLevelChooseOptions(newLevelOptions)
@@ -244,10 +254,11 @@ function CreateHunt(props) {
       qids: JSON.stringify([]),
       qrange: topicOrigin
     }
-    console.log(TopicOriginType);
+
     if (topicOrigin === TopicOriginType.BOOK) {
       result.qtypeid = book
     } else if (topicOrigin === TopicOriginType.KNOW) {
+      console.log(subKnow);
       result.qtypeid = subKnow.value
     }
 

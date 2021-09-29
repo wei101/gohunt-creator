@@ -6,10 +6,11 @@ import HomeBgImg from "../images/home-bg.jpg"
 import Button from "../components/Button"
 import { useHistory } from "react-router"
 import { useEffect, useState } from "react"
-import { getAllTreasure, getMyBaby, getMyBabys } from "../apis"
+import { getMyBaby } from "../apis"
 import posImg from "../images/pos.png"
 const HomeWrapper = styled.div`
   height: 100%;
+  padding-bottom: 1rem;
   background: url(${HomeBgImg});
   display: flex;
   justify-content: center;
@@ -96,8 +97,8 @@ function Home() {
   useEffect(() => {
     (async () => {
 
-      const res = await getMyBabys()
-      const treasures = res.data.packs.map(treasure => {
+      const res = await getMyBaby()
+      const treasures = res.data.babys.map(treasure => {
         return {
           ...treasure,
           date: formatTime(new Date(treasure.t)),

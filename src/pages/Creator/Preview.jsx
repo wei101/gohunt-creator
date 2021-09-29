@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "../../components/Button";
@@ -12,6 +12,7 @@ import { addTopicById, deleteTopicById } from "../../reducers/preview";
 import { useDispatch } from "react-redux";
 import Modal from "../../components/Modal";
 import Input from "../../components/forms/Input";
+import { doPay, pay } from "../../reducers/pay";
 const QipanAPI = require('../../libs/qipan-web')
 const PreviewLayout = styled(MobilePageLayout)`
   display: flex;
@@ -99,12 +100,15 @@ const BtnCenter = styled(Center)`
 function Preview({
   onSubmit
 }) {
-  const { creator, preview } = useSelector(state => state)
+  const { creator, preview, pay } = useSelector(state => state)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [inputTopic, setInputTopic] = useState('')
+  const [showTip, setShowTip] = useState(false)
+  const closeTipModal = () => setShowTip(false)
   const { bid, fee, correctPrecent, personCount, topicCount } = creator
   const { topics } = preview
+  const payDone = pay.payDone
   const isTopicFull = topics.length >= topicCount
 
   const renderQipan = (el, topic) => {
@@ -117,6 +121,8 @@ function Preview({
   const showAddTopicModal = () => {
     if (!isTopicFull) {
       setModalVisible(true)
+    } else {
+      setShowTip(true)
     }
   }
 
@@ -124,6 +130,14 @@ function Preview({
     dispatch(addTopicById(inputTopic, bid))
     setModalVisible(false)
     setInputTopic('')
+  }
+
+  const handleSubmit = async () => {
+    dispatch(doPay(bid, payDone => {
+      if (payDone) {
+        onSubmit()
+      }
+    }))
   }
 
   return (
@@ -171,9 +185,17 @@ function Preview({
           <span>限{personCount}人</span>
         </FooterInfoBar>
         <BtnCenter>
-          <Button onClick={onSubmit}>生成宝藏</Button>
+          <Button onClick={handleSubmit}>生成宝藏</Button>
         </BtnCenter>
       </Footer>
+      <Modal visible={showTip} onClose={closeTipModal} actions={[
+        {
+          label: '确认',
+          callback: closeTipModal
+        }
+      ]}>
+        题目数量已满
+      </Modal>
     </PreviewLayout>
   )
 }

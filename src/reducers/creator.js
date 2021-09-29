@@ -20,6 +20,7 @@ const initialState = {
   desc: "",
   isShare: false,
   openState: 0,
+  username: ''
 }
 
 export function setCreatorData(data) {
@@ -47,6 +48,8 @@ export function loadBabyData(baby) {
     desc: baby.desc,
     isShare: baby.isshare,
     openState: baby.sharetype,
+    username: baby.username,
+    wincount: baby.wincount
   }
 
   if (data.topicOrigin === TopicOriginType.BOOK) {

@@ -3,6 +3,8 @@ import { CardContentLayout, CardHeaderLayout, Center, Hongbao, HuntDetail, InfoF
 import { MobilePageLayout } from "./MobilePageLayout"
 import HBImg from "../../images/wwb.png"
 import Button from "../../components/Button"
+import { useSelector } from "react-redux"
+import { HuntRangeType } from "../../types"
 
 const ShareReportLayout = styled(MobilePageLayout)`
   display: flex;
@@ -38,28 +40,32 @@ const ButtonCenter = styled(Center)`
 `
 
 export default function ShareReport({ onSubmit }) {
+
+  const creator = useSelector(state => state.creator)
+  const restcount = Math.max(creator.personCount - creator.wincount, 0)
+
   return (
     <ShareReportLayout>
       <div>
         <ReportHeaderLayout>
-          <HuntTitle>宝藏名称</HuntTitle>
-          <HuntTips>本宝藏由101围棋亲手埋下</HuntTips>
+          <HuntTitle>{creator.title}</HuntTitle>
+          <HuntTips>本宝藏由{creator.username}亲手埋下</HuntTips>
         </ReportHeaderLayout>
 
         <CardContentLayout>
           <Hongbao>
             <img src={HBImg} alt="" />
-            <span className="fee">100</span>
+            <span className="fee">{creator.fee}</span>
           </Hongbao>
-          <div className="total-fee">奖金100元</div>
+          <div className="total-fee">奖金{creator.fee}元</div>
           <MsgBoxDiv></MsgBoxDiv>
           <InfoFooterDiv>
             <HuntDetail>
-              <li><span className="name-label">题目数量:</span><span className="value-label">10题</span></li>
-              <li><span className="name-label">正确率需达到:</span><span className="value-label">100%</span></li>
-              <li><span className="name-label">宝藏总数:</span><span className="value-label">100</span></li>
-              <li><span className="name-label">目前剩余:</span><span className="value-label">10</span></li>
-              <li><span className="name-label">分享范围:</span><span className="value-label">仅本教室学生可见</span></li>
+              <li><span className="name-label">题目数量:</span><span className="value-label">{creator.topicCount}题</span></li>
+              <li><span className="name-label">正确率需达到:</span><span className="value-label">{creator.correctPrecent}%</span></li>
+              <li><span className="name-label">宝藏总数:</span><span className="value-label">{creator.personCount}</span></li>
+              <li><span className="name-label">目前剩余:</span><span className="value-label">{restcount}</span></li>
+              <li><span className="name-label">分享范围:</span><span className="value-label">{HuntRangeType[creator.openState]}</span></li>
             </HuntDetail>
             <span></span>
           </InfoFooterDiv>

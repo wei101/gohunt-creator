@@ -30,6 +30,7 @@ const Header = styled.div`
   .title {
     font-size: 1.1rem;
     margin: 0;
+    height: 1em;
     color: white;
   }
 
@@ -98,6 +99,7 @@ const MsgBoxDiv = styled.div`
   margin-bottom: 1rem;
   text-align: center;
   color: #948552;
+  overflow: hidden;
 `
 
 const InfoFooterDiv = styled.div`
