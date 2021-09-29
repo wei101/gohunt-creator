@@ -46,7 +46,7 @@ const AvatarImgWrapper = styled.div`
   top: 0;
   bottom: 0;
   margin: auto;
-padding: 0;
+  padding: 0;
 `
 
 const AvatarImg = styled.img`

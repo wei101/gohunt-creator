@@ -65,11 +65,9 @@ function Editor({
 
   const [openBox, setOpenBox] = useState(false)
   const msgs = [
-    'hello world!',
-    'hello world!',
-    'hello world!',
-    'hello world!',
-    'hello world!',
+    '来吧，试试你的棋力',
+    '凭棋力而战，你敢来吗？',
+    '不玩绝对是你的损失！',
   ]
   const toggleOpenBox = () => setOpenBox(!openBox)
   const insertMsg = msg => {
