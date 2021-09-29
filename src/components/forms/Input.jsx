@@ -4,13 +4,13 @@ import { fontSizeMaps } from "./formsStyle";
 
 const InputBox = styled.input`
   width: ${props => {
+    
+    if (props.width) {
+      return props.width
+    }
 
     if (props.fullwidth) {
       return '100%'
-    }
-
-    if (props.width) {
-      return props.width
     }
 
     return 'auto'
@@ -45,7 +45,7 @@ function Input({
   max = Number.MAX_VALUE,
   min = Number.MIN_VALUE,
   type = 'text',
-  maxlength = Number.MAX_VALUE,
+  maxlength = 9999,
   ...props
 }) {
   const [oldValue, setOldValue] = useState(null)

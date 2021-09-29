@@ -33,7 +33,6 @@ function Checkbox(props) {
     name,
     size = 'medium',
     onChange = () => { },
-    defaultChecked = false
   } = props
   const [innerChecked, setInnerChecked] = useState(false)
   
@@ -50,7 +49,7 @@ function Checkbox(props) {
   return (
     <LabelBox size={size}>
       <CheckboxShow checked={finalChecked} />
-      <CheckboxElem type="checkbox" name={name} defaultChecked={defaultChecked} onChange={handleChecked} />
+      <CheckboxElem type="checkbox" name={name} checked={finalChecked} onChange={handleChecked} />
       {children}
     </LabelBox>
   )

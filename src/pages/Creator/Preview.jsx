@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "../../components/Button";
@@ -8,8 +8,10 @@ import { Between } from "../../styles";
 import { Center } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
 import redTrashIcon from "../../images/red-trash.png"
-import { deleteTopicById } from "../../reducers/preview";
+import { addTopicById, deleteTopicById } from "../../reducers/preview";
 import { useDispatch } from "react-redux";
+import Modal from "../../components/Modal";
+import Input from "../../components/forms/Input";
 const QipanAPI = require('../../libs/qipan-web')
 const PreviewLayout = styled(MobilePageLayout)`
   display: flex;
@@ -17,9 +19,10 @@ const PreviewLayout = styled(MobilePageLayout)`
 `
 
 const AddTopic = styled.span`
-  color: #718ba3;
+  color: ${props => props.disabled ? '#ccc' :'#718ba3'};
   font-size: 0.75em;
   font-weight: bold;
+  cursor: pointer;
 `
 
 const Control = styled(Between)`
@@ -79,6 +82,16 @@ const FooterInfoBar = styled(Between)`
   }
 `
 
+const InputTopicBox = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 3rem;
+`
+
+const TopicQN = styled.div`
+
+`
+
 const BtnCenter = styled(Center)`
   padding: 1em 0;
 `
@@ -88,29 +101,55 @@ function Preview({
 }) {
   const { creator, preview } = useSelector(state => state)
   const dispatch = useDispatch()
-  const { bid, fee, correctPrecent, personCount } = creator
+  const [modalVisible, setModalVisible] = useState(false)
+  const [inputTopic, setInputTopic] = useState('')
+  const { bid, fee, correctPrecent, personCount, topicCount } = creator
   const { topics } = preview
+  const isTopicFull = topics.length >= topicCount
+
   const renderQipan = (el, topic) => {
     if (el) {
-      QipanAPI.buildQipuThumbnail(el, topic)
+      QipanAPI.buildTimuThumbnail(el, topic)
     }
   }
 
   const deleteTopic = topicId => dispatch(deleteTopicById(topicId, bid))
+  const showAddTopicModal = () => {
+    if (!isTopicFull) {
+      setModalVisible(true)
+    }
+  }
+
+  const addTopic = () => {
+    dispatch(addTopicById(inputTopic, bid))
+    setModalVisible(false)
+    setInputTopic('')
+  }
 
   return (
     <PreviewLayout>
+      <Modal actions={[
+        {
+          label: '确定',
+          callback: addTopic
+        }
+      ]} visible={modalVisible} onClose={() => setModalVisible(false)}>
+        <InputTopicBox>
+          <span>Q-</span>
+          <Input value={inputTopic} onChange={setInputTopic} type="number" min={1} max={999999} width="10rem" />
+        </InputTopicBox>
+      </Modal>
       <Header level="1">宝藏名</Header>
       <Control>
         <span></span>
-        <AddTopic>添加题目</AddTopic>
+        <AddTopic disabled={isTopicFull} onClick={showAddTopicModal}>添加题目</AddTopic>
       </Control>
       <GridBoxWrapper>
         <GridBox>
           {
             topics.map(topic => {
               return (
-                <GridItemWrapper>
+                <GridItemWrapper key={topic.qid}>
                   <GridItem>
                     <GridItemContent ref={el => renderQipan(el, topic)}>
                     </GridItemContent>

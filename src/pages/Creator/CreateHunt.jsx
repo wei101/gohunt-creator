@@ -436,7 +436,7 @@ function CreateHunt(props) {
               <SubRadois>
                 {
                   classesOptions.map(option => (
-                    <Checkbox size="medium" defaultChecked={classesSelectList.indexOf(option.value) > -1} onChange={handleClassesSelectList} value={option.value} key={option.label}>{option.label}</Checkbox>
+                    <Checkbox size="medium" checked={classesSelectList.indexOf(option.value) > -1} onChange={handleClassesSelectList} value={option.value} key={option.label}>{option.label}</Checkbox>
                   ))
                 }
               </SubRadois>
