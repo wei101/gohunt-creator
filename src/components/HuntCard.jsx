@@ -4,6 +4,8 @@ import trashIcon from "../images/trash_icon.png"
 import editIcon from "../images/edit_icon.png"
 import Icon from "./Icon"
 import Button from "./Button"
+import { StateTipMaps, StateTipSpanMaps } from "../types"
+import { formatTime } from "../utils"
 
 const HuntCardWrapper = styled.div`
   width: 15.5rem;
@@ -38,9 +40,7 @@ const Header = styled.div`
     width: 5rem;
     padding: 0.1rem 0.5rem;
     border-radius: 100px;
-    background-color: #55D68F;
     margin-left: 4px;
-    color: white;
   }
 `
 
@@ -133,14 +133,17 @@ function HuntCard({
   onDelete = () => { },
   onEdit = () => { },
 }) {
-  const { name, usercount, fee, date, docount, okper, qnumber, desc } = data
+  let { name, usercount, fee, date, docount, okper, qnumber, desc, status, startt } = data
+  status = 1
+  const Status = StateTipSpanMaps[status]
+
   return (
     <HuntCardWrapper>
       <Header>
         <h1 className="title">{name}</h1>
         <div>
           <span className="white">{docount}</span>人参与
-          <span className="flag">进行中</span>
+          <Status className="flag">{status == 0 ? formatTime(new Date(startt * 1000)) + '正式开始' : StateTipMaps[status]}</Status>
         </div>
         <div>{date}创建</div>
         <Commands>

@@ -1,3 +1,4 @@
+import { getBabyById } from "../apis";
 import { TopicModeType, TopicOriginType } from "../types";
 import { SET_CREATOR_DATA } from "./actions";
 
@@ -27,6 +28,17 @@ export function setCreatorData(data) {
   return {
     type: SET_CREATOR_DATA,
     data
+  }
+}
+
+export function editBaby(id) {
+  return async dispatch => {
+    const res = await getBabyById(id)
+    if (res.data.result === 0) {
+      dispatch(loadBabyData(res.data.baby))
+    }
+
+    return Promise.resolve(res.data.result)
   }
 }
 

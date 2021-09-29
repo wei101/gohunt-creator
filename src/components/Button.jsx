@@ -1,14 +1,26 @@
 import styled from "styled-components"
 import { fontSizeMaps } from "./forms/formsStyle"
 
+const ButtonColor = {
+  success: '#559e6e',
+  primary: '#5e84cc',
+  danger: '#db6933',
+}
+
+const BorderColor = {
+  success: '#3f8456',
+  primary: '#4873af',
+  danger: '#b44816',
+}
+
 const StyBtn = styled.div`
   display: inline-flex;
-  background-color: ${props => props.color || '#5e84cc'};
+  background-color: ${props => ButtonColor[props.color || 'primary']};
   border-radius: 2rem;
   padding: 0.5rem 1rem;
   color: white;
   align-items: center;
-  box-shadow: 0 0.4em 0px #4873AF;
+  box-shadow: 0 0.4em 0px ${props => BorderColor[props.color || 'primary']};
   cursor: pointer;
   justify-content: center;
   text-align: center;
@@ -33,7 +45,7 @@ const IconBtn = styled.div`
   height: ${props => props.width || 'auto'};
 `
 function Button(props) {
-  const { children, icon, size="medium", color="#5e84cc", width } = props
+  const { children, icon, size = "medium", color = "primary", width } = props
 
   if (icon) {
     return (

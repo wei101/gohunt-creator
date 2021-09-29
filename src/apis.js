@@ -40,6 +40,12 @@ export async function getAllTreasure() {
   });
 }
 
+export async function getBabyById(id) {
+  return await $axios({
+    url: `/red/getonebaby/${id}/`,
+  });
+}
+
 export async function getStartCreateBaby() {
   return await $axios.get('/red/startcreatebaby/')
 }
@@ -57,6 +63,16 @@ export async function deleteOneQuestion(data) {
     method: 'POST',
     url: '/red/deleteonequestion/',
     data,
+  })
+}
+
+export async function deleteOneBaby(bid) {
+  return await $axios({
+    method: 'POST',
+    url: '/red/deleteonebaby/',
+    data: {
+      bid
+    },
   })
 }
 

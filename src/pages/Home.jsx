@@ -5,9 +5,15 @@ import AddImg from "../images/add-timu.png"
 import HomeBgImg from "../images/home-bg.jpg"
 import Button from "../components/Button"
 import { useHistory } from "react-router"
-import { useEffect, useState } from "react"
-import { getMyBaby } from "../apis"
+import React, { useEffect, useState } from "react"
+import ReactDOM from "react-dom"
+import { deleteOneBaby, getMyBaby } from "../apis"
 import posImg from "../images/pos.png"
+import Modal from "../components/Modal"
+import { editBaby } from "../reducers/creator"
+import { useDispatch } from "react-redux"
+import { formatTime } from "../utils"
+
 const HomeWrapper = styled.div`
   height: 100%;
   padding-bottom: 1rem;
@@ -74,24 +80,12 @@ const states = [
   'create',
   'open',
   'close'
-];
-
-const formatTime = date => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-
-  return `${[year, month, day].map(formatNumber).join('/')}`
-}
-
-const formatNumber = n => {
-  n = n.toString()
-  return n[1] ? n : `0${n}`
-}
+]
 
 function Home() {
 
   const history = useHistory()
+  const dispatch = useDispatch()
   const [treasures, setTreasures] = useState([])
 
   useEffect(() => {
@@ -101,7 +95,7 @@ function Home() {
       const treasures = res.data.babys.map(treasure => {
         return {
           ...treasure,
-          date: formatTime(new Date(treasure.t)),
+          date: formatTime(new Date(treasure.startt * 1000)),
           state: states[treasure.status]
         }
       })
@@ -110,6 +104,29 @@ function Home() {
     })()
   }, [])
 
+  const deleteBabyById = async bid => {
+    Modal.show('确认删除?').then(async () => {
+      const res = await deleteOneBaby(bid)
+      if (res.data.result !== 0) {
+        return
+      }
+      const deleteBabyIndex = treasures.findIndex(t => t.id === bid)
+      if (deleteBabyIndex > -1) {
+        const newTreasures = [...treasures]
+        newTreasures.splice(deleteBabyIndex, 1)
+        setTreasures(newTreasures)
+      }
+    })
+  }
+
+  const editHunt = async bid => {
+    dispatch(editBaby(bid)).then(result => {
+      if (result === 0) {
+        history.push('/creator')
+      }
+    })
+  }
+
   return (
     <HomeWrapper>
       {
@@ -117,7 +134,14 @@ function Home() {
           ?
           (
             <HuntCardGrid>
-              {treasures.map(t => <HuntCard key={t.id} data={t} />)}
+              {treasures.map(t =>
+                <HuntCard
+                  onDelete={() => deleteBabyById(t.id)}
+                  onEdit={() => editHunt(t.id)}
+                  key={t.id}
+                  data={t}
+                />
+              )}
             </HuntCardGrid>
           )
           :
@@ -126,7 +150,7 @@ function Home() {
               <HuntPosImg src={posImg} alt="" />
               <div>您还没有创建过宝藏哦~</div>
             </HuntPos>
-          ) 
+          )
       }
 
       <Button onClick={() => history.push('/creator')}>创建宝藏<Icon size="small" src={AddImg} /></Button>

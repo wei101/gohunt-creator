@@ -181,7 +181,7 @@ function Preview({
       <Footer>
         <FooterInfoBar>
           <span>宝藏:{fee}元</span>
-          <span>正确率:{correctPrecent}元</span>
+          <span>正确率:{correctPrecent}%</span>
           <span>限{personCount}人</span>
         </FooterInfoBar>
         <BtnCenter>

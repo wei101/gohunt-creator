@@ -27,11 +27,7 @@ const NameSpan = styled.span`
   color: #9f7e43;
   font-weight: bold;
   font-size: 0.9rem;
-`
-
-const LogoutSpan = styled.span`
-  color: #9B8368;
-  cursor: pointer;
+  line-height: 2.5;
 `
 
 const AvatarImgWrapper = styled.div`
@@ -61,7 +57,6 @@ function Avatar() {
     <AvatarBox>
       <Info>
         <NameSpan>Miiiia</NameSpan>
-        <LogoutSpan>退出</LogoutSpan>
       </Info>
       <AvatarImgWrapper>
         <AvatarImg src={DefaultAvatarImg} />

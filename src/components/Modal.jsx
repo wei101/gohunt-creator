@@ -1,5 +1,7 @@
+import ReactDOM from "react-dom"
 import styled from "styled-components"
 import closeImg from "../images/close.png"
+import { Center } from "../styles"
 import Button from "./Button"
 
 const ModalWrapper = styled.div`
@@ -46,7 +48,7 @@ const ModalButtons = styled.div`
   flex-direction: column;
 `
 
-export default function Modal({
+function Modal({
   onClose = () => { },
   visible = false,
   children,
@@ -65,9 +67,48 @@ export default function Modal({
           {children}
         </ModalContent>
         <ModalButtons>
-          {actions.map(action => <Button {...action.props} onClick={action.callback}>{action.label}</Button>)}
+          {actions.map(action => <Button style={{ marginBottom: 12 }} {...action.props} onClick={action.callback}>{action.label}</Button>)}
         </ModalButtons>
       </ModalDiv>
     </ModalWrapper>
   )
 }
+
+
+const show = (message) => {
+  return new Promise((resolve, reject) => {
+    const container = document.getElementById('root')
+    const cv = document.createElement("div")
+    container.appendChild(cv)
+
+    const removeElem = () => {
+      ReactDOM.unmountComponentAtNode(cv)
+      container.removeChild(cv)
+    }
+
+    ReactDOM.render(<Modal visible={true} onClose={removeElem} actions={[
+      {
+        label: '确定',
+        callback: () => {
+          resolve()
+          removeElem()
+        }
+      },
+      {
+        label: '取消',
+        callback: () => {
+          reject()
+          removeElem()
+        }
+      }
+    ]}>
+      <Center>
+        {message}
+      </Center>
+    </Modal>, cv)
+  })
+
+}
+
+Modal.show = show
+export default Modal
