@@ -17,9 +17,7 @@ store.dispatch(setUserData(JSON.parse(window.UserData.userInfo)))
 
 ReactDOM.render(
   <Provider store={store}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <App />
   </Provider>,
   document.getElementById('root')
 );

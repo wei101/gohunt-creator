@@ -261,16 +261,6 @@ function CreateHunt(props) {
   }, [startTime])
 
   useEffect(() => {
-    setMinFee(personCount)
-  }, [personCount])
-
-  useEffect(() => {
-    if (fee < minFee) {
-      setFee(minFee)
-    }
-  }, [minFee])
-
-  useEffect(() => {
     (async () => {
       const res = await getStartCreateBaby()
       const { levels, books, knows, orginfo = {}, baby } = res.data
@@ -427,7 +417,7 @@ function CreateHunt(props) {
     }
 
 
-    const emptyValOfKey = getObjectEmptyKey(formData)
+    let emptyValOfKey = getObjectEmptyKey(formData)
     const errTipMaps = {
       name: '*宝藏名称不允许为空',
       fee: '*需要填写总金额',
@@ -435,7 +425,15 @@ function CreateHunt(props) {
       okper: '*需要填写正确率',
     }
 
-    const errMsg = errTipMaps[emptyValOfKey]
+
+
+    let errMsg = null
+    if (personCount > Number(fee)) {
+      errMsg = '宝藏数量不可少于金额'
+    } else {
+      errMsg = errTipMaps[emptyValOfKey]
+    }
+
     if (errMsg) {
       setErrMsg(errMsg)
       return
@@ -550,16 +548,16 @@ function CreateHunt(props) {
 
         <Form labelSpan={3} labelAlign="left">
           <FormItem label="总金额">
-            <Input width="5em" fullwidth={false} value={fee} onChange={setFee} type="number" max={10000} min={minFee} />
+            <Input width="5em" fullwidth={false} value={fee} onChange={setFee} type="number" max={10000} min={1} />
             <Unit>元<span className="w">(手续费{isShare ? '10%' : '2%'})</span></Unit>
           </FormItem>
           <FormItem label="要求正确率">
             <Input width="5em" fullwidth={false} value={correctPrecent} onChange={setCorrectPrecent} type="number" max={100} min={0} />
             <Unit>%</Unit>
           </FormItem>
-          <FormItem label="人数限制">
+          <FormItem label="宝藏数量">
             <Input width="5em" fullwidth={false} value={personCount} onChange={setPersonCount} type="number" min={1} max={10000} />
-            <Unit>人</Unit>
+            <Unit>份</Unit>
           </FormItem>
         </Form>
 
