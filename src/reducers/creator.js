@@ -24,6 +24,8 @@ const initialState = {
   openState: 0,
   username: '',
   isPay: false,
+  originName: '',
+  originId: 0,
   startTime: Math.floor(now.getTime() / 300000) * 300,
 }
 
@@ -66,7 +68,7 @@ export function loadBabyData(baby) {
     username: baby.username,
     wincount: baby.wincount,
     startTime: baby.startt,
-    isPay: baby.isPay
+    isPay: baby.isPay,
   }
 
   if (data.topicOrigin === TopicOriginType.BOOK) {
@@ -79,6 +81,16 @@ export function loadBabyData(baby) {
   return {
     type: SET_CREATOR_DATA,
     data
+  }
+}
+
+export function setOrgInfo(orgInfo = {}) {
+  return {
+    type: SET_CREATOR_DATA,
+    data: {
+      originId: orgInfo.orgid,
+      originName: orgInfo.orgname,
+    }
   }
 }
 

@@ -17,6 +17,12 @@ export const HuntRangeType = {
     2: '公开给指定班级学生',
 }
 
+export const HuntCardRangeType = {
+    0: '全体棋友可见',
+    1: '仅本教室学生可见',
+    2: '仅部分班级可见',
+}
+
 export const StateTipMaps = {
     0: '',
     1: '进行中',

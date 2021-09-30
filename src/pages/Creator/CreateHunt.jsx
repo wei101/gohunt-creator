@@ -17,7 +17,7 @@ import { MobilePageLayout } from "./MobilePageLayout";
 import { getStartCreateBaby, saveOneBaby } from "../../apis";
 import { TopicModeType, TopicOriginType } from "../../types";
 import { useDispatch } from "react-redux";
-import { loadBabyData, setCreatorData } from "../../reducers/creator";
+import { loadBabyData, setCreatorData, setOrgInfo } from "../../reducers/creator";
 import { useSelector } from "react-redux";
 import { arrToSeconds, getObjectEmptyKey, parseSeconds } from "../../utils";
 import { setTopics } from "../../reducers/preview";
@@ -165,9 +165,10 @@ const minuteOptions = new Array(12).fill(0).map((_, i) => ({
 
 function CreateHunt(props) {
   const { onSubmit } = props
-  const creator = useSelector(state => state.creator)
+  const { creator, user } = useSelector(state => state)
   const dispatch = useDispatch()
-  const { timeSelected, openState, topicMode, topicOrigin, topicCount, classesSelectList, topicIdList, book, level, subKnow, know, title, fee, correctPrecent, personCount, desc, isShare, bid, startTime } = creator
+  const { timeSelected, openState, topicMode, topicOrigin, topicCount, classesSelectList, topicIdList, book, level, subKnow, know, title, fee, correctPrecent, personCount, desc, isShare, bid, startTime, originId, originName } = creator
+  const { isvip } = user
   const setTimeSelected = v => dispatch(setCreatorData({ timeSelected: v }))
   const setTopicMode = v => dispatch(setCreatorData({ topicMode: v }))
   const setTopicOrigin = v => dispatch(setCreatorData({ topicOrigin: v }))
@@ -181,7 +182,9 @@ function CreateHunt(props) {
   const setTitle = v => dispatch(setCreatorData({ title: v }))
   const setFee = v => dispatch(setCreatorData({ fee: v }))
   const setCorrectPrecent = v => dispatch(setCreatorData({ correctPrecent: v }))
-  const setPersonCount = v => dispatch(setCreatorData({ personCount: v }))
+  const setPersonCount = v => {
+    dispatch(setCreatorData({ personCount: v }))
+  }
   const setIsShare = v => dispatch(setCreatorData({ isShare: v }))
   const setDesc = v => dispatch(setCreatorData({ desc: v }))
   const setOpenState = v => dispatch(setCreatorData({ openState: v }))
@@ -193,6 +196,7 @@ function CreateHunt(props) {
   const [classesOptions, setClassesOptions] = useState([])
   const [knowOptions, setKnowOptions] = useState([])
   const [subKnowOptions, setSubKnowOptions] = useState([])
+  const [minFee, setMinFee] = useState(1)
   const [errMsg, setErrMsg] = useState('')
   const [publishTimes, setPublishTimes] = useState([yearOptions[0].value, monthOptions[0].value, dateOptions[0].value, hourOptions[0].value, minuteOptions[0].value])
 
@@ -257,20 +261,28 @@ function CreateHunt(props) {
   }, [startTime])
 
   useEffect(() => {
+    setMinFee(personCount)
+  }, [personCount])
 
+  useEffect(() => {
+    if (fee < minFee) {
+      setFee(minFee)
+    }
+  }, [minFee])
+
+  useEffect(() => {
     (async () => {
       const res = await getStartCreateBaby()
-      console.log(res);
-      const { levels, books, knows, orginfo, baby } = res.data
+      const { levels, books, knows, orginfo = {}, baby } = res.data
       if (baby) {
         dispatch(loadBabyData(baby))
+        dispatch(setOrgInfo(orginfo))
       }
       const { classes } = orginfo
       let bookOptions = books.map(book => ({ label: book.name, value: book.id }))
       let levelOptions = levels.map(level => ({ label: level.name, value: level.num }))
       let knowOptions = knows.map(know => ({ label: know.name, value: know.id, subs: know.subs }))
       let classesOptions = classes.map(cls => ({ label: cls.name, value: cls.classid }))
-      console.log(knowOptions);
       setBookOptions(bookOptions)
       setLevelOptions(levelOptions)
       setLevelChooseOptions(levelOptions)
@@ -356,7 +368,6 @@ function CreateHunt(props) {
     if (topicOrigin === TopicOriginType.BOOK) {
       result.qtypeid = book
     } else if (topicOrigin === TopicOriginType.KNOW) {
-      console.log(subKnow);
       result.qtypeid = subKnow.value
     }
 
@@ -408,7 +419,6 @@ function CreateHunt(props) {
     }
 
     const res = await saveOneBaby({ bdata: JSON.stringify(formData), bid })
-    console.log(res);
     dispatch(loadBabyData(res.data.baby))
     dispatch(setTopics(res.data.qs))
     onSubmit()
@@ -517,15 +527,15 @@ function CreateHunt(props) {
 
         <Form labelSpan={3} labelAlign="left">
           <FormItem label="总金额">
-            <Input width="5em" fullwidth={false} value={fee} onChange={setFee} type="number" max={1000} min={1} />
-            <Unit>元<span className="w">(手续费)</span></Unit>
+            <Input width="5em" fullwidth={false} value={fee} onChange={setFee} type="number" max={10000} min={minFee} />
+            <Unit>元<span className="w">(手续费{isShare ? '10%' : '2%'})</span></Unit>
           </FormItem>
           <FormItem label="要求正确率">
             <Input width="5em" fullwidth={false} value={correctPrecent} onChange={setCorrectPrecent} type="number" max={100} min={0} />
             <Unit>%</Unit>
           </FormItem>
           <FormItem label="人数限制">
-            <Input width="5em" fullwidth={false} value={personCount} onChange={setPersonCount} type="number" max={100} min={1} />
+            <Input width="5em" fullwidth={false} value={personCount} onChange={setPersonCount} type="number" min={1} max={10000} />
             <Unit>人</Unit>
           </FormItem>
         </Form>
@@ -537,9 +547,14 @@ function CreateHunt(props) {
             <Padding v="0.5rem">
               <Radio size="medium" value={0}>公开给所有棋友</Radio>
             </Padding>
-            <Padding v="0.5rem">
-              <Radio size="medium" value={1}>公开给测试用</Radio>
-            </Padding>
+            {
+              originId &&
+              (
+                <Padding v="0.5rem">
+                  <Radio size="medium" value={1}>公开给{originName}用</Radio>
+                </Padding>
+              )
+            }
             <Padding v="0.5rem">
               <Radio size="medium" value={2}>公开给指定班级学生</Radio>
             </Padding>
@@ -559,7 +574,7 @@ function CreateHunt(props) {
 
         </RadioList>
         <Header level="4">说明</Header>
-        <Editor value={desc} onChange={setDesc} style={{ marginBottom: '1em' }} />
+        <Editor disabled={isvip} value={desc} onChange={setDesc} style={{ marginBottom: '1em' }} />
         <FormHeader>
           <span></span>
           <Header level="4">发布时间</Header>
@@ -573,7 +588,7 @@ function CreateHunt(props) {
           <Select selected={publishTimes[4]} onSelected={v => updatePublishTimes(v, 4)} inline={true} options={publishMinuteOptions} />
         </PublishDateSelectBox>
         <Margin top="2rem" bottom='1rem'>
-          <Checkbox onChange={setIsShare} checked={isShare}>分享到101平台（手续费20%）</Checkbox>
+          <Checkbox onChange={setIsShare} checked={isShare}>分享到101平台（手续费10%）</Checkbox>
         </Margin>
         <Center>
           <Button width='7rem' onClick={handleSubmit}>预览</Button>

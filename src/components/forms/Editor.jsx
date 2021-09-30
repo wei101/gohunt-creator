@@ -6,7 +6,7 @@ import selectArrowImg from "../../images/select-arrow.png"
 
 const TreeSelectLayout = styled.div`
   border-radius: .5em;
-  background-color: #f2e7bd;
+  background-color: ${props => props.disabled ? '#f2e7bd' : '#f2e7bd'};
   font-size: ${props => fontSizeMaps[props.size || 'large']};
   overflow: hidden;
 `
@@ -60,7 +60,8 @@ const SelectItem = styled.div`
 function Editor({
   style,
   value,
-  onChange
+  onChange,
+  disabled = false
 }) {
 
   const [openBox, setOpenBox] = useState(false)
@@ -68,15 +69,20 @@ function Editor({
     '来吧，试试你的棋力',
     '凭棋力而战，你敢来吗？',
     '不玩绝对是你的损失！',
+    '想来一场刺激的寻宝游戏吗？'
   ]
-  const toggleOpenBox = () => setOpenBox(!openBox)
+  const toggleOpenBox = () => {
+    if (!disabled) {
+      setOpenBox(!openBox)
+    }
+  }
   const insertMsg = msg => {
-    onChange(value + msg)
+    onChange(msg)
     toggleOpenBox()
   }
 
   return (
-    <TreeSelectLayout style={style}>
+    <TreeSelectLayout style={style} disabled={disabled}>
       <Content>
         {
           openBox
@@ -91,6 +97,7 @@ function Editor({
             :
             <TextArea
               defaultValue={value}
+              disabled={disabled}
               onChange={e => {
                 onChange(e.target.value)
               }}></TextArea>

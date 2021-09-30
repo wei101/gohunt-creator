@@ -4,7 +4,7 @@ import trashIcon from "../images/trash_icon.png"
 import editIcon from "../images/edit_icon.png"
 import Icon from "./Icon"
 import Button from "./Button"
-import { StateTipMaps, StateTipSpanMaps } from "../types"
+import { HuntCardRangeType, StateTipMaps, StateTipSpanMaps } from "../types"
 import { formatTime } from "../utils"
 
 const HuntCardWrapper = styled.div`
@@ -146,7 +146,7 @@ function HuntCard({
   onEdit = () => { },
   onPreview = () => { },
 }) {
-  let { name, usercount, fee, date, docount, okper, qnumber, desc, status, startt, qcrimgpath } = data
+  let { name, usercount, fee, date, docount, okper, qnumber, desc, status, startt, qcrimgpath, sharetype } = data
   status = 1
   const Status = StateTipSpanMaps[status]
 
@@ -177,7 +177,7 @@ function HuntCard({
             <li><span className="name-label">正确率需达到:</span><span className="value-label">{okper}%</span></li>
             <li><span className="name-label">宝藏总数:</span><span className="value-label">{usercount}</span></li>
             <li><span className="name-label">目前剩余:</span><span className="value-label">{docount}</span></li>
-            <li><span className="name-label">分享范围:</span><span className="value-label">仅本教室学生可见</span></li>
+            <li><span className="name-label">分享范围:</span><span className="value-label">{HuntCardRangeType[sharetype]}</span></li>
           </HuntDetail>
           <span></span>
           {qcrimgpath && <QrCodeImg onClick={onPreview} alt="" src={qcrimgpath} />}

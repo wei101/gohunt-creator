@@ -20,7 +20,6 @@ const NavWrapper = styled.div`
 function Navigator() {
 
     const history = useHistory()
-    console.log(history);
     const handleGoBack = () => location.hash === '#/' ? location.href = 'https://www.101weiqi.com/' : history.goBack()
     return (
         <NavWrapper>

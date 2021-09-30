@@ -3,6 +3,7 @@ import { SET_PAY_DATA, SET_USER_DATA } from "./actions"
 
 const initialState = {
   username: '',
+  isvip: false
 }
 
 export function setUserData(userData) {

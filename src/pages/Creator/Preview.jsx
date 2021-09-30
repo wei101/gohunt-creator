@@ -116,6 +116,11 @@ const PayFee = styled.div`
   margin-top: 1rem;
 `
 
+const WechatQrCode = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 let payStatusTimer = null
 function Preview({
   onSubmit
@@ -131,12 +136,12 @@ function Preview({
 
   const closeTipModal = () => setShowTip(false)
   const closePayModal = () => {
+    clearInterval(payStatusTimer)
     setPayVisible(false)
   }
   const closePaying = () => setPayingVisible(false)
   const { bid, fee, correctPrecent, personCount, topicCount, isPay, isShare } = creator
   const { topics } = preview
-  const payDone = pay.payDone
   const isTopicFull = topics.length >= topicCount
 
     
@@ -194,13 +199,18 @@ function Preview({
     } else {
       // 显示二维码
       Modal.show(
-        <div>
+        <WechatQrCode>
+          <Center style={{marginBottom: 8}}>请用微信扫描下列二维码付款</Center>
           <img alt='' src={data.furl} />
-        </div>,
+        </WechatQrCode>,
         [{
           label: '取消',
-          callback: close => close()
-        }]
+          callback: close => {
+            clearInterval(payStatusTimer)
+            close()
+          }
+        }],
+        () => clearInterval(payStatusTimer)
       )
     }
     startLoopQueryPayStatus(data.trade_no)
@@ -218,6 +228,7 @@ function Preview({
       if (!page || page.closed) {
         setPayingVisible(false)
         clearInterval(pageIsClosedTimer)
+        clearInterval(payStatusTimer)
       }
     }, 1000);
 
@@ -232,8 +243,9 @@ function Preview({
         dispatch(setCreatorData({
           isPay: true
         }))
-
-        onSubmit()
+        clearInterval(payStatusTimer)
+        Modal.show('支付成功!正在生成海报', showClose = false)
+        setTimeout(() => onSubmit(), 2000)
       }
     }, 1000)
   }
