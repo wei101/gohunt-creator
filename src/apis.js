@@ -1,7 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 
-const BASE_URL = 'https://xcxtest.101weiqi.com'
+const BASE_URL = 'https://xcx.101weiqi.com'
 const userInfo = JSON.parse(window.UserData.userInfo)
 
 // 新创建 axios 实例配置
