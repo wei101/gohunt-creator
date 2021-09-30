@@ -327,7 +327,7 @@ function Preview({
       ]}>
         <PayTips>
           <div>缴纳宝藏费用</div>
-          <PayFee>¥{finalFee.toFixed(2)}</PayFee>
+          <PayFee>¥{Number(finalFee).toFixed(2)}</PayFee>
         </PayTips>
       </Modal>
 
