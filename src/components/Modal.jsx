@@ -76,7 +76,7 @@ function Modal({
 }
 
 
-const show = (message, actions = [], onClose, ...rest) => {
+const show = (message, actions = [], onClose = () => {}, showClose = true) => {
   const container = document.getElementById('root')
   const cv = document.createElement("div")
   container.appendChild(cv)
@@ -87,12 +87,13 @@ const show = (message, actions = [], onClose, ...rest) => {
   }
   const withCloseActions = actions.map(action => ({ ...action, callback: () => action.callback(removeElem) }))
 
-  ReactDOM.render(<Modal visible={true} onClose={removeElem} actions={withCloseActions} {...rest}>
+  ReactDOM.render(<Modal visible={true} onClose={removeElem} actions={withCloseActions} showClose={showClose}>
     <Center>
       {message}
     </Center>
   </Modal>, cv)
 
+  return removeElem
 }
 
 Modal.show = show

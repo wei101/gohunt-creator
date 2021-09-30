@@ -411,6 +411,7 @@ function CreateHunt(props) {
     formData.mday = publishTimes[2]
     formData.mhour = publishTimes[3]
     formData.mminute = publishTimes[4]
+    formData.orgid = originId
 
     if (openState === 2) {
       formData.cids = JSON.stringify(classesSelectList)

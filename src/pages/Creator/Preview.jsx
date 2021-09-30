@@ -124,6 +124,7 @@ const WechatQrCode = styled.div`
 `
 
 let payStatusTimer = null
+let closeWechat = null
 function Preview({
   onSubmit,
   onBack
@@ -201,7 +202,7 @@ function Preview({
       wx.start_wx_pay(data)
     } else {
       // 显示二维码
-      Modal.show(
+      closeWechat = Modal.show(
         <WechatQrCode>
           <Center style={{ marginBottom: 8 }}>请用微信扫描下列二维码付款</Center>
           <img alt='' src={data.furl} />
@@ -247,8 +248,15 @@ function Preview({
           isPay: true
         }))
         clearInterval(payStatusTimer)
-        Modal.show('支付成功!正在生成海报', showClose = false)
-        setTimeout(() => onSubmit(), 2000)
+        const closeModal = Modal.show('支付成功!正在生成海报', [], () => { }, false)
+        setTimeout(() => {
+          closeModal()
+          onSubmit()
+          setPayingVisible(false)
+          setPayVisible(false)
+          setShowTip(false)
+          closeWechat && closeWechat()
+        }, 2000)
       }
     }, 1000)
   }
