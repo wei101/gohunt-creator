@@ -276,8 +276,9 @@ function CreateHunt(props) {
       const { levels, books, knows, orginfo = {}, baby } = res.data
       if (baby) {
         dispatch(loadBabyData(baby))
-        dispatch(setOrgInfo(orginfo))
       }
+
+      dispatch(setOrgInfo(orginfo))
       const { classes } = orginfo
       let bookOptions = books.map(book => ({ label: book.name, value: book.id }))
       let levelOptions = levels.map(level => ({ label: level.name, value: level.num }))
@@ -562,39 +563,42 @@ function CreateHunt(props) {
           </FormItem>
         </Form>
 
-
-        <Header level="4">公开范围</Header>
-        <RadioList>
-          <RadioGroup value={openState} onChange={setOpenState} name="rr">
-            <Padding v="0.5rem">
-              <Radio size="medium" value={0}>公开给所有棋友</Radio>
-            </Padding>
-            {
-              originId &&
-              (
-                <Padding v="0.5rem">
-                  <Radio size="medium" value={1}>公开给{originName}用</Radio>
-                </Padding>
-              )
-            }
-            <Padding v="0.5rem">
-              <Radio size="medium" value={2}>公开给指定班级学生</Radio>
-            </Padding>
-          </RadioGroup>
-          {
-            openState === 2 &&
-            (
-              <SubRadois>
+        {
+          originId == 0
+            ?
+            null
+            :
+            <>
+              <Header level="4">公开范围</Header>
+              <RadioList>
+                <RadioGroup value={openState} onChange={setOpenState} name="rr">
+                  <Padding v="0.5rem">
+                    <Radio size="medium" value={0}>公开给所有棋友</Radio>
+                  </Padding>
+                  <Padding v="0.5rem">
+                    <Radio size="medium" value={1}>公开给{originName}用</Radio>
+                  </Padding>
+                  <Padding v="0.5rem">
+                    <Radio size="medium" value={2}>公开给指定班级学生</Radio>
+                  </Padding>
+                </RadioGroup>
                 {
-                  classesOptions.map(option => (
-                    <Checkbox size="medium" checked={classesSelectList.indexOf(option.value) > -1} onChange={handleClassesSelectList} value={option.value} key={option.label}>{option.label}</Checkbox>
-                  ))
+                  openState === 2 &&
+                  (
+                    <SubRadois>
+                      {
+                        classesOptions.map(option => (
+                          <Checkbox size="medium" checked={classesSelectList.indexOf(option.value) > -1} onChange={handleClassesSelectList} value={option.value} key={option.label}>{option.label}</Checkbox>
+                        ))
+                      }
+                    </SubRadois>
+                  )
                 }
-              </SubRadois>
-            )
-          }
 
-        </RadioList>
+              </RadioList>
+            </>
+        }
+
         <Header level="4">说明</Header>
         <Editor disabled={isvip} value={desc} onChange={setDesc} style={{ marginBottom: '1em' }} />
         <FormHeader>

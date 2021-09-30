@@ -17,7 +17,6 @@ export function setUserData(userData) {
 
 export default (state = initialState, action) => {
   const { type, data } = action
-
   switch (type) {
     case SET_USER_DATA:
       return {

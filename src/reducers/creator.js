@@ -7,7 +7,7 @@ const initialState = {
   bid: 0,
   title: '',
   fee: 10,
-  timeSelected: 5,
+  timeSelected: 60,
   topicMode: TopicModeType.OPTION,
   topicOrigin: TopicOriginType.SOUL,
   topicCount: 3,
