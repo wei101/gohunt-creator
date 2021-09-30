@@ -52,7 +52,8 @@ function Modal({
   onClose = () => { },
   visible = false,
   children,
-  actions = []
+  actions = [],
+  showClose = true,
 }) {
 
   if (!visible) {
@@ -63,11 +64,11 @@ function Modal({
     <ModalWrapper>
       <ModalDiv>
         <ModalContent>
-          <CloseBtn onClick={onClose} />
+          {showClose && <CloseBtn onClick={onClose} />}
           {children}
         </ModalContent>
         <ModalButtons>
-          {actions.map(action => <Button style={{ marginBottom: 12 }} {...action.props} onClick={action.callback}>{action.label}</Button>)}
+          {actions.map((action, i) => <Button key={i} style={{ marginBottom: 12 }} {...action.props} onClick={action.callback}>{action.label}</Button>)}
         </ModalButtons>
       </ModalDiv>
     </ModalWrapper>
@@ -83,8 +84,8 @@ const show = (message, actions = []) => {
     ReactDOM.unmountComponentAtNode(cv)
     container.removeChild(cv)
   }
-  const withCloseActions = actions.map(action => ({...action, callback: () => action.callback(removeElem)}))
-  
+  const withCloseActions = actions.map(action => ({ ...action, callback: () => action.callback(removeElem) }))
+
   ReactDOM.render(<Modal visible={true} onClose={removeElem} actions={withCloseActions}>
     <Center>
       {message}

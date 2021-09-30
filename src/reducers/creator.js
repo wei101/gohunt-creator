@@ -23,7 +23,8 @@ const initialState = {
   isShare: false,
   openState: 0,
   username: '',
-  startTime: Math.floor(now.getTime() / 300000) * 300
+  isPay: false,
+  startTime: Math.floor(now.getTime() / 300000) * 300,
 }
 
 export function setCreatorData(data) {
@@ -64,7 +65,8 @@ export function loadBabyData(baby) {
     openState: baby.sharetype,
     username: baby.username,
     wincount: baby.wincount,
-    startTime: baby.startt
+    startTime: baby.startt,
+    isPay: baby.isPay
   }
 
   if (data.topicOrigin === TopicOriginType.BOOK) {

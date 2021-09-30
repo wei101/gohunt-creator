@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux"
 import styled from "styled-components"
 import DefaultAvatarImg from '../images/default-avatar.png'
 
@@ -52,11 +53,12 @@ const AvatarImg = styled.img`
 `
 function Avatar() {
 
+  const user = useSelector(state => state.user)
 
   return (
     <AvatarBox>
       <Info>
-        <NameSpan>Miiiia</NameSpan>
+        <NameSpan>{user.username}</NameSpan>
       </Info>
       <AvatarImgWrapper>
         <AvatarImg src={DefaultAvatarImg} />

@@ -2,13 +2,15 @@ import axios from "axios";
 import qs from "qs";
 
 const BASE_URL = 'https://xcxtest.101weiqi.com'
+const userInfo = JSON.parse(window.UserData.userInfo)
+
 // 新创建 axios 实例配置
 const $axios = axios.create({
   baseURL: BASE_URL,
   timeout: 5000,
   headers: {
     'content-type': 'application/x-www-form-urlencoded',
-    Authorization: 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6IiIsImV4cCI6MTYzNTQ5MTAxNiwib3JpZ19pYXQiOjE2MzI4MTI2MTYsInVzZXJuYW1lIjoiXHU2ZDRiXHU4YmQ1XHU3NTI4XHU4ZDI2XHU1M2Y3IiwidXNlcl9pZCI6MTB9.hwyh-YOq0HxFuyuE7lTN80J8IIiVnZLQJfmdeVZCo7c'//window.UserData.userInfo.token,
+    Authorization: 'JWT ' + userInfo.token,
   },
 });
 
@@ -43,6 +45,34 @@ export async function getAllTreasure() {
 export async function getBabyById(id) {
   return await $axios({
     url: `/red/getonebaby/${id}/`,
+  });
+}
+
+export async function startPayWx(bid) {
+  return await $axios({
+    url: `/red/startpaywx/${bid}/`,
+    data: {
+      babyid: bid
+    }
+  });
+}
+
+export async function startPayAli(bid) {
+  return await $axios({
+    url: `/red/startpayali/${bid}/`,
+    data: {
+      babyid: bid
+    }
+  });
+}
+
+export async function queryPay(trade_no) {
+  return await $axios({
+    method: 'post',
+    url: `/red/querypay/`,
+    data: {
+      trade_no
+    }
   });
 }
 

@@ -12,15 +12,21 @@ import { addTopicById, deleteTopicById } from "../../reducers/preview";
 import { useDispatch } from "react-redux";
 import Modal from "../../components/Modal";
 import Input from "../../components/forms/Input";
+import wechatIcon from "../../images/wechat.png"
+import zfIcon from "../../images/zhifupay.png"
 import { doPay, pay } from "../../reducers/pay";
+import { buyRedPackWx, queryPay, startPayAli, startPayWx } from "../../apis";
+import { setCreatorData } from "../../reducers/creator";
 const QipanAPI = require('../../libs/qipan-web')
+const wx = require('../../libs/wx')
+
 const PreviewLayout = styled(MobilePageLayout)`
   display: flex;
   flex-direction: column;
 `
 
 const AddTopic = styled.span`
-  color: ${props => props.disabled ? '#ccc' :'#718ba3'};
+  color: ${props => props.disabled ? '#ccc' : '#718ba3'};
   font-size: 0.75em;
   font-weight: bold;
   cursor: pointer;
@@ -97,6 +103,20 @@ const BtnCenter = styled(Center)`
   padding: 1em 0;
 `
 
+const PayTips = styled.div`
+  padding: 0 2.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #603708;
+  text-align: center;
+`
+
+const PayFee = styled.div`
+  color: #CE4700;
+  margin-top: 1rem;
+`
+
+let payStatusTimer = null
 function Preview({
   onSubmit
 }) {
@@ -105,11 +125,25 @@ function Preview({
   const [modalVisible, setModalVisible] = useState(false)
   const [inputTopic, setInputTopic] = useState('')
   const [showTip, setShowTip] = useState(false)
+  const [payVisible, setPayVisible] = useState(false)
+  const [payingVisible, setPayingVisible] = useState(false)
+  const [finalFee, setFinalFee] = useState(false)
+
   const closeTipModal = () => setShowTip(false)
-  const { bid, fee, correctPrecent, personCount, topicCount } = creator
+  const closePayModal = () => {
+    setPayVisible(false)
+  }
+  const closePaying = () => setPayingVisible(false)
+  const { bid, fee, correctPrecent, personCount, topicCount, isPay, isShare } = creator
   const { topics } = preview
   const payDone = pay.payDone
   const isTopicFull = topics.length >= topicCount
+
+    
+  useEffect(() => {
+    setFinalFee(fee * (isShare ? 1.1 : 1.02))
+  }, [fee, isShare])
+
 
   const renderQipan = (el, topic) => {
     if (el) {
@@ -141,12 +175,74 @@ function Preview({
       return
     }
 
-    dispatch(doPay(bid, payDone => {
-      if (payDone) {
+    if (isPay) {
+      onSubmit()
+    } else {
+      setPayVisible(true)
+    }
+  }
+
+  const wechatPay = async close => {
+    const { data = {} } = await startPayWx(bid)
+
+    if (data.result !== 0) {
+      return
+    }
+
+    if (data.paytype === 'JSAPI') {
+      wx.start_wx_pay(data)
+    } else {
+      // 显示二维码
+      Modal.show(
+        <div>
+          <img alt='' src={data.furl} />
+        </div>,
+        [{
+          label: '取消',
+          callback: close => close()
+        }]
+      )
+    }
+    startLoopQueryPayStatus(data.trade_no)
+  }
+
+  const zfbPay = async () => {
+    const { data = {} } = await startPayAli(bid)
+
+    if (data.result !== 0) {
+      return
+    }
+    setPayingVisible(true)
+    const page = window.open(data.redirurl)
+    let pageIsClosedTimer = setInterval(() => {
+      if (!page || page.closed) {
+        setPayingVisible(false)
+        clearInterval(pageIsClosedTimer)
+      }
+    }, 1000);
+
+    startLoopQueryPayStatus(data.trade_no)
+  }
+
+  const startLoopQueryPayStatus = (tradeNo) => {
+    clearInterval(payStatusTimer)
+    payStatusTimer = setInterval(async () => {
+      const { data = {} } = await queryPay(tradeNo)
+      if (data.result === 0) {
+        dispatch(setCreatorData({
+          isPay: true
+        }))
+
         onSubmit()
       }
-    }))
+    }, 1000)
   }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(payStatusTimer)
+    }
+  }, [])
 
   return (
     <PreviewLayout>
@@ -203,6 +299,25 @@ function Preview({
         }
       ]}>
         题目数量已满
+      </Modal>
+      <Modal visible={payVisible} onClose={closePayModal} actions={[
+        {
+          label: <><Icon size="small" src={wechatIcon} /><span style={{ width: '6em' }}>微信支付</span></>,
+          callback: close => wechatPay(close),
+        },
+        {
+          label: <><Icon size="small" src={zfIcon} /><span style={{ width: '6em' }}>支付宝支付</span></>,
+          callback: close => zfbPay(close)
+        }
+      ]}>
+        <PayTips>
+          <div>缴纳宝藏费用</div>
+          <PayFee>¥{finalFee}</PayFee>
+        </PayTips>
+      </Modal>
+
+      <Modal visible={payingVisible} onClose={closePaying} showClose={false}>
+        支付中
       </Modal>
     </PreviewLayout>
   )

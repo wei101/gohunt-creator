@@ -7,10 +7,13 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
 import thunk from 'redux-thunk'
+import { setUserData } from './reducers/user'
 
 const store = createStore(reducer, compose(
   applyMiddleware(thunk),
 ))
+
+store.dispatch(setUserData(JSON.parse(window.UserData.userInfo)))
 
 ReactDOM.render(
   <Provider store={store}>
