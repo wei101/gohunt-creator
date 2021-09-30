@@ -301,7 +301,7 @@ function Preview({
         <FooterInfoBar>
           <span>宝藏:{fee}元</span>
           <span>正确率:{correctPrecent}%</span>
-          <span>共{personCount}份</span>
+          <span>分成{personCount}份</span>
         </FooterInfoBar>
         <BtnCenter>
           <Button onClick={handleSubmit}>生成宝藏</Button>

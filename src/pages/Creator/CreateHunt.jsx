@@ -614,10 +614,10 @@ function CreateHunt(props) {
         <Margin top="2rem" bottom='1rem'>
           <Checkbox onChange={setIsShare} checked={isShare}>分享到101平台（手续费10%）</Checkbox>
         </Margin>
+        {errMsg && <ErrMsgBox>{errMsg}</ErrMsgBox>}
         <Center>
           <Button width='7rem' onClick={handleSubmit}>预览</Button>
         </Center>
-        {errMsg && <ErrMsgBox>{errMsg}</ErrMsgBox>}
       </ContentBox>
     </MobilePageLayout>
   )
