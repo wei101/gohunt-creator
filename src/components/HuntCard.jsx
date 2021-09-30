@@ -146,9 +146,10 @@ function HuntCard({
   onEdit = () => { },
   onPreview = () => { },
 }) {
-  let { name, usercount, fee, date, docount, okper, qnumber, desc, status, startt, qcrimgpath, sharetype } = data
+  let { name, usercount, fee, date, docount, okper, qnumber, desc, status, startt, qcrimgpath, sharetype, wincount } = data
   status = 1
   const Status = StateTipSpanMaps[status]
+  const restcount = Math.max(usercount - wincount, 0)
 
   return (
     <HuntCardWrapper>
@@ -176,7 +177,7 @@ function HuntCard({
             <li><span className="name-label">题目数量:</span><span className="value-label">{qnumber}题</span></li>
             <li><span className="name-label">正确率需达到:</span><span className="value-label">{okper}%</span></li>
             <li><span className="name-label">宝藏总数:</span><span className="value-label">{usercount}</span></li>
-            <li><span className="name-label">目前剩余:</span><span className="value-label">{docount}</span></li>
+            <li><span className="name-label">目前剩余:</span><span className="value-label">{restcount}</span></li>
             <li><span className="name-label">分享范围:</span><span className="value-label">{HuntCardRangeType[sharetype]}</span></li>
           </HuntDetail>
           <span></span>
