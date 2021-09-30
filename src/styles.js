@@ -123,3 +123,12 @@ export const Margin = styled.div`
     return `${v || top} ${h || right} ${v || bottom} ${h || left}`
   }}
 `
+
+export const BackIcon = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  cursor: pointer;
+`

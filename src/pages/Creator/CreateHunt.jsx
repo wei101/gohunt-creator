@@ -12,7 +12,7 @@ import Icon from "../../components/Icon";
 import covertImg from "../../images/convert.png"
 import deleteImg from "../../images/delete.png"
 import addImg from "../../images/add.png"
-import { Center, Margin, Padding } from "../../styles";
+import { BackIcon, Center, Margin, Padding } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
 import { getStartCreateBaby, saveOneBaby } from "../../apis";
 import { TopicModeType, TopicOriginType } from "../../types";
@@ -289,15 +289,18 @@ function CreateHunt(props) {
       setLevel(levelOptions[0].value)
       setClassesOptions(classesOptions)
       setKnowOptions(knowOptions)
+      updateSubKnowOptions(knowOptions[0])
     })()
   }, [])
 
   useEffect(() => {
-    if (!subKnow) {
+    const isEmptyObj = Object.keys(subKnow).length === 0
+
+    if (isEmptyObj) {
       return
     }
 
-    if (!know) {
+    if (!know || Object.keys(know).length === 0) {
       const knowName = subKnow.name.split(":")[0] || ''
       const option = knowOptions.find(op => op.label === knowName)
       if (option) {
@@ -308,17 +311,36 @@ function CreateHunt(props) {
     const { minlevel, maxlevel } = subKnow
     const newLevelOptions = levelOptions.filter(option => option.value > minlevel && option.value < maxlevel)
     setLevelChooseOptions(newLevelOptions)
+    if (newLevelOptions.find(o => o.value !== level)) {
+      setLevel(newLevelOptions[0].value)
+    }
   }, [subKnow])
 
   const handleTopicModeChange = (value, option) => {
     setTopicOrigin(value)
     setLevelChooseOptions(levelOptions)
+
+    if (value === TopicOriginType.BOOK) {
+      if (bookOptions.length > 0) {
+        setBook(bookOptions[0].value)
+      }
+    }
   }
 
   const onKnowChange = (value, option) => {
     const subs = (option?.subs || [])
     setKnow(option)
-    setSubKnowOptions(subs.map(sub => ({ label: sub.name, value: sub.id, ...sub })))
+    updateSubKnowOptions(option)
+  }
+
+  const updateSubKnowOptions = (option) => {
+    const options = option.subs.map(sub => ({ label: sub.name, value: sub.id, ...sub }))
+    setSubKnowOptions(options)
+
+    const isEmptyObj = Object.keys(subKnow).length === 0
+    if (isEmptyObj && options.length > 0) {
+      setSubKnow(options[0])
+    }
   }
 
   const onSubKnowChange = (value, option) => {

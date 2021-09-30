@@ -10,6 +10,7 @@ const fontSizeLevelMaps = {
 }
 
 const Title = styled.div`
+    position: relative;
     white-space: nowrap;
     color: #539e6c;
     text-align: center;

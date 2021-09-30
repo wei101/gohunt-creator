@@ -67,6 +67,14 @@ function Creator() {
     }
   }
 
+  
+  const onBack= () => {
+    if (-1 < progress) {
+      setProgress(progress - 1)
+      setShow(!show)
+    }
+  }
+
   const CurrentPage = comps[progress]
   return (
     <CreatorBox>
@@ -83,7 +91,7 @@ function Creator() {
             classNames="test"
             timeout={500}
           >
-            <CurrentPage onSubmit={onSubmit} />
+            <CurrentPage onSubmit={onSubmit} onBack={onBack} />
           </CSSTransition>
         </SwitchTransition>
       </div>

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
 import Icon from "../../components/Icon";
-import { Between } from "../../styles";
+import { BackIcon, Between } from "../../styles";
 import { Center } from "../../styles";
 import { MobilePageLayout } from "./MobilePageLayout";
 import redTrashIcon from "../../images/red-trash.png"
@@ -17,6 +17,8 @@ import zfIcon from "../../images/zhifupay.png"
 import { doPay, pay } from "../../reducers/pay";
 import { buyRedPackWx, queryPay, startPayAli, startPayWx } from "../../apis";
 import { setCreatorData } from "../../reducers/creator";
+import nbackIcon from "../../images/nback.png"
+import { useHistory } from "react-router";
 const QipanAPI = require('../../libs/qipan-web')
 const wx = require('../../libs/wx')
 
@@ -123,7 +125,8 @@ const WechatQrCode = styled.div`
 
 let payStatusTimer = null
 function Preview({
-  onSubmit
+  onSubmit,
+  onBack
 }) {
   const { creator, preview, pay } = useSelector(state => state)
   const dispatch = useDispatch()
@@ -144,7 +147,7 @@ function Preview({
   const { topics } = preview
   const isTopicFull = topics.length >= topicCount
 
-    
+
   useEffect(() => {
     setFinalFee(fee * (isShare ? 1.1 : 1.02))
   }, [fee, isShare])
@@ -200,7 +203,7 @@ function Preview({
       // 显示二维码
       Modal.show(
         <WechatQrCode>
-          <Center style={{marginBottom: 8}}>请用微信扫描下列二维码付款</Center>
+          <Center style={{ marginBottom: 8 }}>请用微信扫描下列二维码付款</Center>
           <img alt='' src={data.furl} />
         </WechatQrCode>,
         [{
@@ -269,7 +272,7 @@ function Preview({
           <Input value={inputTopic} onChange={setInputTopic} type="number" min={1} max={999999} width="10rem" />
         </InputTopicBox>
       </Modal>
-      <Header level="1">宝藏名</Header>
+      <Header level="1">{creator.title}<BackIcon onClick={onBack}><Icon src={nbackIcon} /></BackIcon>      </Header>
       <Control>
         <span></span>
         <AddTopic disabled={isTopicFull} onClick={showAddTopicModal}>添加题目</AddTopic>
@@ -324,7 +327,7 @@ function Preview({
       ]}>
         <PayTips>
           <div>缴纳宝藏费用</div>
-          <PayFee>¥{finalFee}</PayFee>
+          <PayFee>¥{finalFee.toFixed(2)}</PayFee>
         </PayTips>
       </Modal>
 

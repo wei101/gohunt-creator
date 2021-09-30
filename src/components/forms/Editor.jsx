@@ -72,9 +72,7 @@ function Editor({
     '想来一场刺激的寻宝游戏吗？'
   ]
   const toggleOpenBox = () => {
-    if (!disabled) {
-      setOpenBox(!openBox)
-    }
+    setOpenBox(!openBox)
   }
   const insertMsg = msg => {
     onChange(msg)
