@@ -7,6 +7,7 @@ import CreateHunt from "./CreateHunt"
 import Preview from "./Preview"
 import ShareReport from "./ShareReport"
 import './index.css'
+import { useParams } from "react-router-dom"
 
 const CreatorBox = styled.div`
   background: url(${creatorBgImg});
@@ -56,7 +57,7 @@ const pageKeys = [
 
 const comps = [CreateHunt, Preview, ShareReport]
 function Creator() {
-
+  const { bid } = useParams()
   const [progress, setProgress] = useState(0)
   const [show, setShow] = useState(0)
 
@@ -91,7 +92,7 @@ function Creator() {
             classNames="test"
             timeout={500}
           >
-            <CurrentPage onSubmit={onSubmit} onBack={onBack} />
+            <CurrentPage editBid={bid} onSubmit={onSubmit} onBack={onBack} />
           </CSSTransition>
         </SwitchTransition>
       </div>

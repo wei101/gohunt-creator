@@ -94,7 +94,7 @@ function Editor({
             </SelectList>
             :
             <TextArea
-              defaultValue={value}
+              value={value}
               disabled={disabled}
               onChange={e => {
                 onChange(e.target.value)

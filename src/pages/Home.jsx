@@ -89,7 +89,6 @@ const states = [
 function Home() {
 
   const history = useHistory()
-  const dispatch = useDispatch()
   const [treasures, setTreasures] = useState([])
 
   useEffect(() => {
@@ -132,11 +131,11 @@ function Home() {
   }
 
   const editHunt = async bid => {
-    dispatch(editBaby(bid)).then(result => {
-      if (result === 0) {
-        history.push('/creator')
-      }
-    })
+    // dispatch(editBaby(bid)).then(result => {
+    //   if (result === 0) {
+    history.push(`/creator/${bid}`)
+      // }
+    // })
   }
 
   const showLargeQrCodeImg = (imgUrl) => {

@@ -25,7 +25,10 @@ function App() {
       <Router>
         <Navigator />
         <Switch>
-          <Route path="/creator">
+          <Route exact path="/creator/">
+            <Creator />
+          </Route>
+          <Route path="/creator/:bid">
             <Creator />
           </Route>
           <Route path="/">

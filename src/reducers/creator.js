@@ -48,7 +48,6 @@ export function editBaby(id) {
 }
 
 export function loadBabyData(baby) {
-
   const data = {
     topicMode: baby.selecttype,
     bid: baby.id,
@@ -68,7 +67,7 @@ export function loadBabyData(baby) {
     username: baby.username,
     wincount: baby.wincount,
     startTime: baby.startt,
-    isPay: baby.isPay,
+    isPay: baby.ispay,
   }
 
   if (data.topicOrigin === TopicOriginType.BOOK) {

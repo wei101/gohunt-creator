@@ -17,7 +17,7 @@ import { MobilePageLayout } from "./MobilePageLayout";
 import { getStartCreateBaby, saveOneBaby } from "../../apis";
 import { TopicModeType, TopicOriginType } from "../../types";
 import { useDispatch } from "react-redux";
-import { loadBabyData, setCreatorData, setOrgInfo } from "../../reducers/creator";
+import { editBaby, loadBabyData, setCreatorData, setOrgInfo } from "../../reducers/creator";
 import { useSelector } from "react-redux";
 import { arrToSeconds, getObjectEmptyKey, parseSeconds } from "../../utils";
 import { setTopics } from "../../reducers/preview";
@@ -164,7 +164,7 @@ const minuteOptions = new Array(12).fill(0).map((_, i) => ({
 }))
 
 function CreateHunt(props) {
-  const { onSubmit } = props
+  const { onSubmit, editBid } = props
   const { creator, user } = useSelector(state => state)
   const dispatch = useDispatch()
   const { timeSelected, openState, topicMode, topicOrigin, topicCount, classesSelectList, topicIdList, book, level, subKnow, know, title, fee, correctPrecent, personCount, desc, isShare, bid, startTime, originId, originName } = creator
@@ -262,9 +262,13 @@ function CreateHunt(props) {
 
   useEffect(() => {
     (async () => {
+
       const res = await getStartCreateBaby()
       const { levels, books, knows, orginfo = {}, baby } = res.data
-      if (baby) {
+
+      if (editBid) {
+        dispatch(editBaby(editBid))
+      } else if (baby) {
         dispatch(loadBabyData(baby))
       }
 
